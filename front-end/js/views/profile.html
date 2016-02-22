@@ -1,0 +1,11 @@
+<section ng-show="users.checkLoggedIn()">
+  <div class="row">
+    <div class="col-sm-6 col-md-4">
+      <img ng-src="{{ users.user.local.image }}">
+      <div class="caption">
+        <h3>{{ users.user.local.fullname | uppercase }}</h3>
+        <p>{{ users.user.local.email }}</p>
+      </div>
+    </div>
+  </div>
+</section>

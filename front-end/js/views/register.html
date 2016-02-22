@@ -1,0 +1,46 @@
+<section ng-hide="users.checkLoggedIn()">
+  <h2>Register</h2>
+
+  <form id="login" name="users.registerForm" ng-submit="users.register()" novalidate>
+    <div class="alert alert-danger" role="alert" ng-show="(!!users.error && users.registerForm.$submitted)">{{ users.error }}</div>
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" class="form-control" id="username" placeholder="Username" ng-model="users.user.username">
+    </div>
+
+    <div class="form-group">
+      <label for="fullname">Full name</label>
+      <input type="text" class="form-control" id="fullname" placeholder="Full name" ng-model="users.user.fullname">
+    </div>
+
+    <div class="form-group">
+      <label for="image">Image URL</label>
+      <input type="text" class="form-control" id="image" placeholder="Image URL" ng-model="users.user.image">
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email address</label>
+      <input type="email" class="form-control" id="email" placeholder="Email" name="email" ng-model="users.user.email" required>
+    </div>
+
+    <div class="alert alert-danger" role="alert" ng-messages="users.registerForm['email'].$error" ng-show="(users.registerForm.$submitted && users.registerForm['email'].$invalid)">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+      <span ng-message="required">Email is required.</span>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" class="form-control" id="password" name="password" placeholder="Password" ng-model="users.user.password" required>
+    </div>
+
+    <div class="alert alert-danger" role="alert" ng-messages="users.registerForm['password'].$error" ng-show="(users.registerForm.$submitted && users.registerForm['password'].$invalid)">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+      <span ng-message="required">Password is required.</span>
+    </div>
+
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</section>
