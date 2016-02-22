@@ -3,8 +3,8 @@ angular
   .controller('GamesController', GamesController);
 
 // Here we inject the currentUser service to access the current user
-GamesController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$sce'];
-function GamesController(User, TokenService, $state, CurrentUser, $sce){
+GamesController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$sce', '$interval'];
+function GamesController(User, TokenService, $state, CurrentUser, $sce, $interval){
 
   var self = this;
 
@@ -60,7 +60,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce){
 
   self.startTimer = function(duration) {
   	var timer = duration, minutes, seconds;
-  	var timerInterval = setInterval(function () {
+  	var timerInterval = $interval(function () {
   		console.log('one second');
   		minutes = parseInt(timer / 60, 10);
   		seconds = parseInt(timer % 60, 10);
@@ -69,7 +69,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce){
   		seconds = seconds < 10 ? "0" + seconds : seconds;
 
   		self.timerText = minutes + ":" + seconds;
-  		console.log(self.timerText)
+  		console.log(self.timerText);
 
   		if (--timer < 0) {
   			console.log('reached zero')
@@ -77,14 +77,14 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce){
   			//timeUp = true;
   			self.inputDisabled = false;
   			console.log(self.inputDisabled);
-  			clearInterval(timerInterval);
+  			$interval.cancel(timerInterval);
   		}
   	}, 1000);
   }
 
 
   self.newGame = function() {
-  	self.inputDisabled = false;
+  	self.inputDisabled = true;
   	wordIndex = 0;
   	nextWord = paragraphText.split(" ")[0] + " ";
   	paragraphHtmlArray = paragraphText.split(" ");
