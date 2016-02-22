@@ -10,26 +10,36 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
 
   self.inputDisabled;
 
-  var paragraphText = "The UK will be taking a 'big gamble' with its security if it votes to leave the European Union, defence secretary Michael Fallon has claimed. The 'collective weight' of partnerships such as the EU made it easier to deal with global threats, he told the BBC.";
+  var paragraphText = "Five members of the Friends cast have finally come together in a much-anticipated Friends reunion on US TV. The cast of the 1990s hit comedy, minus Matthew Perry, reunited on NBC's Tribute to James Burrows on Sunday. They reminisced during the two-hour tribute that featured clips from the respected director's roster of shows.";
   var paragraphWords = paragraphText.split(" ");
   var wordIndex = 0;
 
-  self.paragraphHTML = "<p>The UK will be taking a 'big gamble' with its security if it votes to leave the European Union, defence secretary Michael Fallon has claimed. The 'collective weight' of partnerships such as the EU made it easier to deal with global threats, he told the BBC.</p>";
   var paragraphHtmlArray = ""
 
-  self.typed = "";
+  self.inputText = "";
+  self.typedSoFar = "";
+  self.wpm = "";
 
-  self.timerText = "0:03";
+  self.timerText = "";
 
   self.incorrect = false;
 
+  self.gameRunning = false;
+
   var nextWord = "";
 
+  self.calcWpm = function(time) {
+  	console.log('Time: ' + time);
+  	console.log('Chars typed: ' + self.typedSoFar.length);
+  	self.wpm = Math.floor((self.typedSoFar.length*0.1/5)/time);
+  }
+
   self.updateState = function() {
-  	if (nextWord.lastIndexOf(self.typed, 0) === 0) {
+  	if (nextWord.lastIndexOf(self.inputText, 0) === 0) {
   		self.incorrect = false
   		paragraphHtmlArray[wordIndex+1] = "<span class='correct'>" + nextWord.trim() + "</span>";
-  		if (self.typed.length == nextWord.length) {
+  		if (self.inputText.length == nextWord.length) {
+  			self.typedSoFar += self.inputText;
   			paragraphHtmlArray[wordIndex+1] = "<span>" + nextWord + "</span>";
   			wordIndex++;
   			if (wordIndex===paragraphWords.length) {
@@ -40,7 +50,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   				nextWord = paragraphWords[wordIndex] + " ";
   			}
   			paragraphHtmlArray[wordIndex+1] = "<span class='correct'>" + nextWord.trim() + "</span>";
-  			self.typed = "";
+  			self.inputText = "";
   		}
   	} else {
   		self.incorrect = true;
@@ -55,35 +65,46 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
 
 
   function endGame() {
-
+  	//
   }
 
-  self.startTimer = function(duration) {
+  self.startTimer = function(duration, mode) {
   	var timer = duration, minutes, seconds;
   	var timerInterval = $interval(function () {
-  		console.log('one second');
   		minutes = parseInt(timer / 60, 10);
   		seconds = parseInt(timer % 60, 10);
+
+  		// if (mode=='end' && (seconds % 2 == 0)) {
+  		// 	var minutesElapsed = ((duration-seconds)*1.0)/60;  // need to account for minutes
+  		// 	self.calcWpm(minutesElapsed);
+  		// }
 
   		minutes = minutes < 10 ? + minutes : minutes;
   		seconds = seconds < 10 ? "0" + seconds : seconds;
 
   		self.timerText = minutes + ":" + seconds;
-  		console.log(self.timerText);
+
 
   		if (--timer < 0) {
-  			console.log('reached zero')
   			//gameRunning = false;
   			//timeUp = true;
-  			self.inputDisabled = false;
-  			console.log(self.inputDisabled);
-  			$interval.cancel(timerInterval);
+  			if (mode==='start') {
+  				self.inputDisabled = false;
+  				$interval.cancel(timerInterval);
+  				self.gameRunning = true;
+  				self.startTimer(59,'end');
+  			} else if (mode==='end') {
+  				console.log('Out of time');
+  				$interval.cancel(timerInterval);
+  				self.gameRunning = false;
+  			}	
   		}
   	}, 1000);
   }
 
 
   self.newGame = function() {
+  	self.gameRunning = false;
   	self.inputDisabled = true;
   	wordIndex = 0;
   	nextWord = paragraphText.split(" ")[0] + " ";
@@ -92,7 +113,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   	paragraphHtmlArray.push("</p");
   	paragraphHtmlArray[1] = "<span class='correct'>" + nextWord.trim() + "</span>";
   	self.paragraphHtmlString = paragraphHtmlArray.join(" ");
-  	self.startTimer(2); // Set timer
+  	self.startTimer(2,'start'); // Set timer
   }
 
 

@@ -1,7 +1,11 @@
 <h1>Current game</h1>
 
 <div id='timer-container'>
-	<p id='timer-text'>Starts in: {{games.timerText}}</p>
+	<p id='timer-text'>Timer: {{games.timerText}}</p>
+</div>
+
+<div id='wpm-container'>
+	<p id='wpm-text'>WPM: {{games.wpm}}</p>
 </div>
 
 
@@ -9,4 +13,4 @@
 </div>
 
 
-<input id='typebox' ng-class="{'input-incorrect': games.incorrect}" ng-model='games.typed' type='text' placeholder='Type here' ng-change="games.updateState()" ng-disabled='games.inputDisabled' ng-trim="false">
+<input focus-on-condition="games.gameRunning" id='typebox' ng-class="{'input-incorrect': games.incorrect}" ng-model='games.inputText' type='text' placeholder='Type here' ng-change="games.updateState()" ng-disabled='games.inputDisabled' ng-trim="false">
