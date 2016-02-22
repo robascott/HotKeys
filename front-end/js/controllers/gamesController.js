@@ -29,9 +29,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   var nextWord = "";
 
   self.calcWpm = function(time) {
-  	console.log('Time: ' + time);
-  	console.log('Chars typed: ' + self.typedSoFar.length);
-  	self.wpm = Math.floor((self.typedSoFar.length*0.1/5)/time);
+  	self.wpm = Math.floor((self.typedSoFar.length*1.0/5)/time);
   }
 
   self.updateState = function() {
@@ -74,10 +72,10 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   		minutes = parseInt(timer / 60, 10);
   		seconds = parseInt(timer % 60, 10);
 
-  		// if (mode=='end' && (seconds % 2 == 0)) {
-  		// 	var minutesElapsed = ((duration-seconds)*1.0)/60;  // need to account for minutes
-  		// 	self.calcWpm(minutesElapsed);
-  		// }
+  		if (mode=='end' && (seconds % 2 == 0)) {
+  			var minutesElapsed = ((duration-seconds)*1.0)/60;  // need to account for minutes
+  			self.calcWpm(minutesElapsed);
+  		}
 
   		minutes = minutes < 10 ? + minutes : minutes;
   		seconds = seconds < 10 ? "0" + seconds : seconds;
@@ -115,9 +113,6 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   	self.paragraphHtmlString = paragraphHtmlArray.join(" ");
   	self.startTimer(2,'start'); // Set timer
   }
-
-
-  self.newGame();
 
 
   return self;
