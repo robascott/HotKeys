@@ -1,1 +1,33 @@
+main {
+	max-width: 80%;
+	margin: 0 auto;
+}
 
+#paragraph {
+	width: 500px;
+	height: 200px;
+	border: 1px solid black;
+}
+
+#typebox {
+	width: 500px;
+	height: 50px;
+	border: 1px solid black;
+	margin-top: 20px;
+	font-size: 20px;
+	padding: 5px;
+}
+
+.input-incorrect {
+	background-color: #e74c3c
+}
+
+
+.correct {
+	color: green;
+}
+
+
+.incorrect {
+	color: red;
+}

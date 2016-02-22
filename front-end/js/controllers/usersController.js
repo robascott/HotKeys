@@ -1,5 +1,5 @@
 angular
-  .module('logging')
+  .module('hotkeys')
   .controller('UsersController', UsersController);
 
 // Here we inject the currentUser service to access the current user

@@ -1,5 +1,5 @@
 angular
-  .module('logging')
+  .module('hotkeys')
   .factory('authInterceptor', AuthInterceptor);
 
 AuthInterceptor.$inject = ['API', 'TokenService'];

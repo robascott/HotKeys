@@ -1,1 +1,8 @@
-<h1>Home</h1>
+<h1>Current game</h1>
+
+
+<div id='paragraph' ng-bind-html="games.renderParagraph()">
+</div>
+
+
+<input id='typebox' ng-class="{'input-incorrect': games.incorrect}" ng-model='games.typed' type='text' placeholder='Type here' ng-change="games.updateState()" ng-trim="false">

@@ -1,5 +1,5 @@
 angular
-  .module('logging', ['ngResource', 'angular-jwt', 'ui.router'])
+  .module('hotkeys', ['ngResource', 'angular-jwt', 'ui.router'])
   .constant('API', 'http://localhost:3000/api')
   .config(MainRouter)
   .config(function($httpProvider){

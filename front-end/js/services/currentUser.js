@@ -1,5 +1,5 @@
 angular
-  .module('logging')
+  .module('hotkeys')
   .service('CurrentUser', CurrentUser);
 
 // We inject the token service into the this currentUser service and this service will be the one we call in our user controller

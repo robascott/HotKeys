@@ -1,5 +1,5 @@
 angular
-  .module('logging')
+  .module('hotkeys')
   .factory('User', User);
 
 User.$inject = ['$resource', 'API'];

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="logging">
+<html ng-app="hotkeys">
 <head>
   <title>Angular Authentication</title>
   <!-- External Files -->
@@ -17,9 +17,8 @@
   <script src="./js/services/authInterceptor.js"></script>
   <script src="./js/services/currentUser.js"></script>
   <script src="./js/models/user.js"></script>
-  <script src="./js/models/project.js"></script>
   <script src="./js/controllers/usersController.js"></script>
-  <script src="./js/controllers/projectsController.js"></script>
+  <script src="./js/controllers/gamesController.js"></script>
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -47,12 +46,6 @@
               <a href="#" ui-sref="users">Users</a>
             </li>
             <li ng-show="users.checkLoggedIn()">
-              <a href="#" ui-sref="projects">Projects</a>
-            </li>
-            <li ng-show="users.checkLoggedIn()">
-              <a href="#" ui-sref="addproject">Add Project</a>
-            </li>
-            <li ng-show="users.checkLoggedIn()">
               <a href="#" ui-sref="profile">Profile</a>
             </li>
             <li ng-hide="users.checkLoggedIn()">
@@ -70,7 +63,7 @@
     </nav>
   </header>
 
-  <main class="container" ui-view></main>
+  <main class="container" ng-controller="GamesController as games" ui-view></main>
 
 </body>
 </html>
