@@ -56,14 +56,13 @@ app.use(function (err, req, res, next) {
 io.on('connection', function(socket){
   socket.join('default');
 
-  // var clients_in_the_room = io.sockets.adapter.rooms['default']; 
-  // for (var clientId in clients_in_the_room ) {
-  //   console.log('client: %s', clientId); //Seeing is believing 
-  //   var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
-  // }
-
+  console.log('user connected');
   
-  console.log('a user connected');
+  io.sockets.in('default').emit('show marker');
+
+  socket.on('show marker (remote)', function(data) {
+    socket.broadcast.to('default').emit('show marker (remote)', data)
+  })
   
   socket.on('disconnect', function() {
       console.log('user disconnected');
@@ -75,7 +74,7 @@ io.on('connection', function(socket){
 
   socket.on('update progress', function(data) {
     console.log(data);
-    io.sockets.in('default').emit('update progress', data);
+    socket.broadcast.to('default').emit('update progress (remote)', data);
   });
 
 });

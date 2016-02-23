@@ -3,6 +3,11 @@ main {
 	margin: 0 auto;
 }
 
+ul {
+	list-style-type: none;
+	padding-left: 0;
+}
+
 #paragraph {
 	width: 500px;
 	height: 200px;

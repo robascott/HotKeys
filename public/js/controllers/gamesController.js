@@ -2,8 +2,8 @@ angular
   .module('hotkeys')
   .controller('GamesController', GamesController);
 
-GamesController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$sce', '$interval', 'socket'];
-function GamesController(User, TokenService, $state, CurrentUser, $sce, $interval, socket){
+GamesController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$sce', '$interval', 'socket', '$scope'];
+function GamesController(User, TokenService, $state, CurrentUser, $sce, $interval, socket, $scope){
 
   var self = this;
 
@@ -29,7 +29,12 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   }
 
 
+  self.myData = {percentage: 0};
   self.playerData = {};
+
+
+  // self.playerNames = {};
+  // self.playerPercentages = {};
 
   self.timerText = "";
 
@@ -46,6 +51,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   self.updateState = function() {
   	if (nextWord.lastIndexOf(self.inputText, 0) === 0) {
       socket.emit('update progress', {name: self.name, percentage: ((self.typedSoFar.length/paragraphText.length)*100)});
+      self.myData['percentage'] = (self.typedSoFar.length/paragraphText.length)*100;
   		self.incorrect = false
   		paragraphHtmlArray[wordIndex+1] = "<span class='correct'>" + nextWord.trim() + "</span>";
   		if (self.inputText.length == nextWord.length) {
@@ -100,7 +106,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   				self.inputDisabled = false;
   				$interval.cancel(timerInterval);
   				self.gameRunning = true;
-  				self.startTimer(5,'end');
+  				self.startTimer(10,'end');
   			} else if (mode==='end') {
   				self.inputText = "";
   				self.inputDisabled = true;
@@ -133,8 +139,18 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     self.startGame();
   });
 
-  socket.on('update progress', function(data) {
+  socket.on('update progress (remote)', function(data) {
     self.playerData[data.name] = data.percentage;
+  });
+
+  socket.on('show marker', function() {
+    socket.emit('show marker (remote)', {name: self.name});
+  });
+
+  socket.on('show marker (remote)', function(data) {
+    console.log('adding new player marker');
+    self.playerData[data.name] = 0;;
+    $scope.$apply();
   });
 
 

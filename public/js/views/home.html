@@ -1,13 +1,12 @@
 <input ng-click='games.newGame()' type='button' value='New Game'>
 
-<p>Username: {{games.name}}</p>
-
 <form ng-submit='games.updateUsername()'>
 	<input type='text' placeholder='Enter name' ng-model='games.tempName' ng-disabled='!games.inputDisabled'>
 	<input type='submit' value='Update'>
 </form>
 
 
+<p>{{games.name}}: {{games.myData.percentage}}%</p>
 <ul ng-repeat='(name,percentage) in games.playerData'>
 	<li>
 		<p>{{name}}: {{percentage}}%</p>
