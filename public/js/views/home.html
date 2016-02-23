@@ -7,9 +7,9 @@
 
 
 <p>{{games.name}}: {{games.myData.percentage}}%</p>
-<ul ng-repeat='(name,percentage) in games.playerData'>
+<ul ng-repeat='(id,data) in games.playerData'>
 	<li>
-		<p>{{name}}: {{percentage}}%</p>
+		<p>{{data.name}}: {{data.percentage}}%</p>
 	</li>
 </ul>
 

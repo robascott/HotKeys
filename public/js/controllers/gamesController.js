@@ -26,15 +26,16 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   self.updateUsername = function() {
     self.name = self.tempName;
     self.tempName = "";
+    socket.emit('update name',{id: socket.id, name:self.name});
   }
 
 
   self.myData = {percentage: 0};
-  self.playerData = {};
 
 
-  // self.playerNames = {};
-  // self.playerPercentages = {};
+  self.playerData = {};  // {234235235: {name: 'Robin', perctentage: 24}, 23412353: {name: 'Simon', percentage: 18}}
+
+
 
   self.timerText = "";
 
@@ -50,7 +51,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
 
   self.updateState = function() {
   	if (nextWord.lastIndexOf(self.inputText, 0) === 0) {
-      socket.emit('update progress', {name: self.name, percentage: ((self.typedSoFar.length/paragraphText.length)*100)});
+      socket.emit('update progress', {id: socket.id, percentage: ((self.typedSoFar.length/paragraphText.length)*100)});
       self.myData['percentage'] = (self.typedSoFar.length/paragraphText.length)*100;
   		self.incorrect = false
   		paragraphHtmlArray[wordIndex+1] = "<span class='correct'>" + nextWord.trim() + "</span>";
@@ -140,18 +141,26 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   });
 
   socket.on('update progress (remote)', function(data) {
-    self.playerData[data.name] = data.percentage;
+    self.playerData[data.id].percentage = data.percentage;
   });
 
   socket.on('show marker', function() {
-    socket.emit('show marker (remote)', {name: self.name});
+    socket.emit('show marker (remote)', {id: socket.id, name: self.name});
   });
 
   socket.on('show marker (remote)', function(data) {
-    console.log('adding new player marker');
-    self.playerData[data.name] = 0;;
+    console.log(data);
+    self.playerData[data.id] = {}
+    self.playerData[data.id].percentage = 0;
+    self.playerData[data.id].name = data.name;
     $scope.$apply();
   });
+
+
+  socket.on('update name', function(data) {
+    self.playerData[data.id].name = data.name;
+    $scope.$apply();
+  })
 
 
   return self;

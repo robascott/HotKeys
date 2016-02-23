@@ -58,7 +58,7 @@ io.on('connection', function(socket){
 
   console.log('user connected');
   
-  io.sockets.in('default').emit('show marker');
+  this.emit('show marker');
 
   socket.on('show marker (remote)', function(data) {
     socket.broadcast.to('default').emit('show marker (remote)', data)
@@ -73,8 +73,12 @@ io.on('connection', function(socket){
   })
 
   socket.on('update progress', function(data) {
-    console.log(data);
     socket.broadcast.to('default').emit('update progress (remote)', data);
+  });
+
+
+  socket.on('update name', function(data) {
+    socket.broadcast.to('default').emit('update name', data);
   });
 
 });
