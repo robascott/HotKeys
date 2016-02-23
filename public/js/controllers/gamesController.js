@@ -23,18 +23,8 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   self.name = Math.random().toString(36).substr(2, 5);
 
 
-  self.updateUsername = function() {
-    self.name = self.tempName;
-    self.tempName = "";
-    socket.emit('update name',{id: socket.id, name:self.name});
-  }
-
-
   self.myData = {percentage: 0};
-
-
   self.playerData = {};  // {234235235: {name: 'Robin', perctentage: 24}, 23412353: {name: 'Simon', percentage: 18}}
-
 
 
   self.timerText = "";
@@ -44,6 +34,28 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   self.gameRunning = false;
 
   var nextWord = "";
+
+
+  self.updateUsername = function() {
+
+    var nameAlreadyExists = false;
+
+    Object.keys(self.playerData).forEach(function(id) {
+        if (self.playerData[id].name.toLowerCase() === self.tempName.toLowerCase()) {
+          nameAlreadyExists = true;
+          self.tempName = "";
+        }
+    });
+
+    if (!nameAlreadyExists) {
+      self.name = self.tempName;
+      socket.emit('update name',{id: socket.id, name:self.name});
+      self.tempName = "";
+    } else {
+      alert('name already exists!');
+    }
+    
+  }
 
   self.calcWpm = function(time) {
   	self.wpm = Math.floor((self.typedSoFar.length*1.0/5)/time);
