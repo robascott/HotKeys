@@ -61,11 +61,12 @@ io.on('connection', function(socket){
   this.emit('show marker');
 
   socket.on('show marker (remote)', function(data) {
-    socket.broadcast.to('default').emit('show marker (remote)', data)
+    socket.broadcast.to('default').emit('show marker (remote)', data);
   })
   
   socket.on('disconnect', function() {
       console.log('user disconnected');
+      socket.broadcast.to('default').emit('remove user', {id:socket.id});
     });
 
   socket.on('start game', function() {

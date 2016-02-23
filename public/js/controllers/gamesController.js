@@ -149,17 +149,23 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   });
 
   socket.on('show marker (remote)', function(data) {
-    console.log(data);
     self.playerData[data.id] = {}
     self.playerData[data.id].percentage = 0;
     self.playerData[data.id].name = data.name;
     $scope.$apply();
   });
 
-
   socket.on('update name', function(data) {
     self.playerData[data.id].name = data.name;
     $scope.$apply();
+  });
+
+  socket.on('remove user', function(data) {
+    if (!self.gameRunning) {
+      self.playerData = {};
+      socket.emit('show marker (remote)', {id: socket.id, name: self.name});
+      $scope.$apply();
+    }
   })
 
 
