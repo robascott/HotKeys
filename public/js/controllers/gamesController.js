@@ -2,13 +2,12 @@ angular
   .module('hotkeys')
   .controller('GamesController', GamesController);
 
-// Here we inject the currentUser service to access the current user
-GamesController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$sce', '$interval'];
-function GamesController(User, TokenService, $state, CurrentUser, $sce, $interval){
+GamesController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$sce', '$interval', 'socket'];
+function GamesController(User, TokenService, $state, CurrentUser, $sce, $interval, socket){
 
   var self = this;
 
-  self.inputDisabled;
+  self.inputDisabled = true;
 
   var paragraphText = "Five members of the Friends cast have finally come together in a much-anticipated Friends reunion on US TV. The cast of the 1990s hit comedy, minus Matthew Perry, reunited on NBC's Tribute to James Burrows on Sunday. They reminisced during the two-hour tribute that featured clips from the respected director's roster of shows.";
   var paragraphWords = paragraphText.split(" ");
@@ -19,6 +18,18 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   self.inputText = "";
   self.typedSoFar = "";
   self.wpm = "";
+
+  self.tempName = "";
+  self.name = Math.random().toString(36).substr(2, 5);
+
+
+  self.updateUsername = function() {
+    self.name = self.tempName;
+    self.tempName = "";
+  }
+
+
+  self.playerData = {};
 
   self.timerText = "";
 
@@ -34,6 +45,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
 
   self.updateState = function() {
   	if (nextWord.lastIndexOf(self.inputText, 0) === 0) {
+      socket.emit('update progress', {name: self.name, percentage: ((self.typedSoFar.length/paragraphText.length)*100)});
   		self.incorrect = false
   		paragraphHtmlArray[wordIndex+1] = "<span class='correct'>" + nextWord.trim() + "</span>";
   		if (self.inputText.length == nextWord.length) {
@@ -84,15 +96,14 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
 
 
   		if (--timer < 0) {
-  			//gameRunning = false;
-  			//timeUp = true;
   			if (mode==='start') {
   				self.inputDisabled = false;
   				$interval.cancel(timerInterval);
   				self.gameRunning = true;
-  				self.startTimer(59,'end');
+  				self.startTimer(5,'end');
   			} else if (mode==='end') {
-  				console.log('Out of time');
+  				self.inputText = "";
+  				self.inputDisabled = true;
   				$interval.cancel(timerInterval);
   				self.gameRunning = false;
   			}	
@@ -100,8 +111,12 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   	}, 1000);
   }
 
-
   self.newGame = function() {
+    socket.emit('start game');
+  }
+
+
+  self.startGame = function() {
   	self.gameRunning = false;
   	self.inputDisabled = true;
   	wordIndex = 0;
@@ -111,8 +126,16 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   	paragraphHtmlArray.push("</p");
   	paragraphHtmlArray[1] = "<span class='correct'>" + nextWord.trim() + "</span>";
   	self.paragraphHtmlString = paragraphHtmlArray.join(" ");
-  	self.startTimer(2,'start'); // Set timer
+  	self.startTimer(3,'start'); // Set timer
   }
+
+  socket.on('start game', function() {
+    self.startGame();
+  });
+
+  socket.on('update progress', function(data) {
+    self.playerData[data.name] = data.percentage;
+  });
 
 
   return self;

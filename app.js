@@ -10,6 +10,8 @@ var methodOverride = require("method-override");
 var jwt            = require('jsonwebtoken');
 var expressJWT     = require('express-jwt');
 var app            = express();
+var http           = require('http').Server(app);
+var io             = require('socket.io').listen(http);
 
 var config         = require('./config/config');
 var User           = require('./models/user');
@@ -34,6 +36,8 @@ app.use(morgan('dev'));
 app.use(cors());
 app.use(passport.initialize());
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use('/api', expressJWT({ secret: secret })
   .unless({
     path: [
@@ -49,7 +53,34 @@ app.use(function (err, req, res, next) {
   next();
 });
 
+io.on('connection', function(socket){
+  socket.join('default');
+
+  // var clients_in_the_room = io.sockets.adapter.rooms['default']; 
+  // for (var clientId in clients_in_the_room ) {
+  //   console.log('client: %s', clientId); //Seeing is believing 
+  //   var client_socket = io.sockets.connected[clientId];//Do whatever you want with this
+  // }
+
+  
+  console.log('a user connected');
+  
+  socket.on('disconnect', function() {
+      console.log('user disconnected');
+    });
+
+  socket.on('start game', function() {
+    io.sockets.in('default').emit('start game')
+  })
+
+  socket.on('update progress', function(data) {
+    console.log(data);
+    io.sockets.in('default').emit('update progress', data);
+  });
+
+});
+
 var routes = require('./config/routes');
 app.use("/api", routes);
 
-app.listen(3000);
+http.listen(3000);

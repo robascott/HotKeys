@@ -1,5 +1,19 @@
 <input ng-click='games.newGame()' type='button' value='New Game'>
 
+<p>Username: {{games.name}}</p>
+
+<form ng-submit='games.updateUsername()'>
+	<input type='text' placeholder='Enter name' ng-model='games.tempName' ng-disabled='!games.inputDisabled'>
+	<input type='submit' value='Update'>
+</form>
+
+
+<ul ng-repeat='(name,percentage) in games.playerData'>
+	<li>
+		<p>{{name}}: {{percentage}}%</p>
+	</li>
+</ul>
+
 <div id='timer-container'>
 	<p id='timer-text'>Timer: {{games.timerText}}</p>
 </div>
