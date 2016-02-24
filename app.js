@@ -77,6 +77,10 @@ io.on('connection', function(socket){
     socket.broadcast.to('default').emit('update progress (remote)', data);
   });
 
+  socket.on('reached finishline', function(data) {
+    socket.broadcast.to('default').emit('player finished', data);
+  })
+
 
   socket.on('update name', function(data) {
     socket.broadcast.to('default').emit('update name', data);

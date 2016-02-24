@@ -9,7 +9,8 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
 
   self.inputDisabled = true;
 
-  var paragraphText = "Five members of the Friends cast have finally come together in a much-anticipated Friends reunion on US TV. The cast of the 1990s hit comedy, minus Matthew Perry, reunited on NBC's Tribute to James Burrows on Sunday. They reminisced during the two-hour tribute that featured clips from the respected director's roster of shows.";
+  //var paragraphText = "Five members of the Friends cast have finally come together in a much-anticipated Friends reunion on US TV. The cast of the 1990s hit comedy, minus Matthew Perry, reunited on NBC's Tribute to James Burrows on Sunday. They reminisced during the two-hour tribute that featured clips from the respected director's roster of shows.";
+  var paragraphText = "This is a test";
   var paragraphWords = paragraphText.split(" ");
   var wordIndex = 0;
 
@@ -22,10 +23,11 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   self.tempName = "";
   self.name = Math.random().toString(36).substr(2, 5);
 
-
   self.myData = {percentage: 0};
-  self.playerData = {};  // {234235235: {name: 'Robin', perctentage: 24}, 23412353: {name: 'Simon', percentage: 18}}
+  self.playerData = {};  // e.g. {234235235: {name: 'Robin', perctentage: 24, position: 1}, 23412353: {name: 'Simon', percentage: 18, position: 2}}
+  self.playerPositions = {} // e.g. {234235235: 1, 3452345234: 2}
 
+  self.currentState; // countdown|racing|finished
 
   self.timerText = "";
 
@@ -77,13 +79,15 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   			paragraphHtmlArray[wordIndex+1] = "<span>" + nextWord + "</span>";
   			wordIndex++;
   			if (wordIndex===paragraphWords.length) {
-  				endGame();
-  			} if (wordIndex===paragraphWords.length-1) {
-  				nextWord = paragraphWords[wordIndex];
+          self.currentState = 'finished';
+  				reachedFinish();
+  			} else if (wordIndex===paragraphWords.length-1) { // last word
+  				nextWord = paragraphWords[wordIndex]; // no space after final word
+          paragraphHtmlArray[wordIndex+1] = "<span class='correct'>" + nextWord.trim() + "</span>";
   			} else {
   				nextWord = paragraphWords[wordIndex] + " ";
+          paragraphHtmlArray[wordIndex+1] = "<span class='correct'>" + nextWord.trim() + "</span>";
   			}
-  			paragraphHtmlArray[wordIndex+1] = "<span class='correct'>" + nextWord.trim() + "</span>";
   			self.inputText = "";
   		}
   	} else {
@@ -98,17 +102,36 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   }
 
 
-  function endGame() {
-  	//
+  function convertToOrdinal(n) {
+    var ords = {1: 'st', 2: 'nd', 3: 'rd'};
+    return n + (ords[n % 100] || 'th');
   }
 
-  self.startTimer = function(duration, mode) {
+
+  function reachedFinish() {
+    self.inputText = "";
+    self.inputDisabled = true;
+
+    var myPos = Object.keys(self.playerPositions).length + 1
+    self.playerPositions[socket.id] = myPos;
+    self.myData.position = convertToOrdinal(myPos);
+
+    socket.emit('reached finishline', {id: socket.id, position: myPos});
+
+  }
+
+
+  function endGame() {
+  	console.log('ending game');
+  }
+
+  self.startTimer = function(duration) {
   	var timer = duration, minutes, seconds;
   	var timerInterval = $interval(function () {
   		minutes = parseInt(timer / 60, 10);
   		seconds = parseInt(timer % 60, 10);
 
-  		if (mode=='end' && (duration-timer >= 2 && seconds % 2 == 0)) {
+  		if (self.currentState=='racing' && (duration-timer >= 2 && seconds % 2 == 0)) {
   			var minutesElapsed = ((duration-timer)*1.0)/60;
   			self.calcWpm(minutesElapsed);
   		}
@@ -120,18 +143,20 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
 
 
   		if (--timer < 0) {
-  			if (mode==='start') {
+  			if (self.currentState==='countdown') {
   				self.inputDisabled = false;
   				$interval.cancel(timerInterval);
-  				self.gameRunning = true;
-  				self.startTimer(10,'end');
-  			} else if (mode==='end') {
+          self.currentState = 'racing'
+  				self.startTimer(10);
+  			} else if (self.currentState==='finished') {
   				self.inputText = "";
           self.incorrect = false;
   				self.inputDisabled = true;
   				$interval.cancel(timerInterval);
   				self.gameRunning = false;
-  			}	
+  			}	else if (self.currentState==='racing') {
+          console.log('out of time');
+        }
   		}
   	}, 1000);
   }
@@ -140,18 +165,26 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     socket.emit('start game');
   }
 
-
   self.startGame = function() {
-  	self.gameRunning = false;
+  	self.gameRunning = true;
   	self.inputDisabled = true;
+    
+    self.tempName = "";
+    self.inputText = "";
+    self.typedSoFar = "";
+    self.wpm = "0";
+    self.myData = {percentage: 0};
   	wordIndex = 0;
+
+
   	nextWord = paragraphText.split(" ")[0] + " ";
   	paragraphHtmlArray = paragraphText.split(" ");
   	paragraphHtmlArray.unshift("<p>");
   	paragraphHtmlArray.push("</p");
   	paragraphHtmlArray[1] = "<span class='correct'>" + nextWord.trim() + "</span>";
   	self.paragraphHtmlString = paragraphHtmlArray.join(" ");
-  	self.startTimer(3,'start'); // Set timer
+    self.currentState = 'countdown';
+  	self.startTimer(3); // Set timer
   }
 
   socket.on('start game', function() {
@@ -161,6 +194,11 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   socket.on('update progress (remote)', function(data) {
     self.playerData[data.id].percentage = data.percentage;
   });
+
+  socket.on('player finished', function(data) {
+    self.playerPositions[data.id] = data.position;
+    self.playerData[data.id].position = convertToOrdinal(data.position);
+  })
 
   socket.on('show marker', function() {
     socket.emit('show marker (remote)', {id: socket.id, name: self.name});

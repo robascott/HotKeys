@@ -1,15 +1,15 @@
 <input ng-click='games.newGame()' type='button' value='New Game'>
 
 <form ng-submit='games.updateUsername()'>
-	<input type='text' placeholder='Enter name' ng-model='games.tempName' ng-disabled='!games.inputDisabled'>
+	<input type='text' placeholder='Enter name' ng-model='games.tempName' ng-disabled='games.gameRunning'>
 	<input type='submit' value='Update'>
 </form>
 
 
-<p>{{games.name}}: {{games.myData.percentage}}%</p>
+<p>{{games.name}}: {{games.myData.percentage}}%, Pos:{{games.myData.position}}</p>
 <ul ng-repeat='(id,data) in games.playerData'>
 	<li>
-		<p>{{data.name}}: {{data.percentage}}%</p>
+		<p>{{data.name}}: {{data.percentage}}%, Pos: {{data.position}}</p>
 	</li>
 </ul>
 
@@ -26,4 +26,4 @@
 </div>
 
 
-<input focus-on-condition="games.gameRunning" id='typebox' ng-class="{'input-incorrect': games.incorrect}" ng-model='games.inputText' type='text' placeholder='Type here' ng-change="games.updateState()" ng-disabled='games.inputDisabled' ng-trim="false">
+<input focus-on-condition="!games.inputDisabled" id='typebox' ng-class="{'input-incorrect': games.incorrect}" ng-model='games.inputText' type='text' placeholder='Type here' ng-change="games.updateState()" ng-disabled='games.inputDisabled' ng-trim="false">
