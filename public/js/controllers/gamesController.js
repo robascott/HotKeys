@@ -104,7 +104,11 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
 
   function convertToOrdinal(n) {
     var ords = {1: 'st', 2: 'nd', 3: 'rd'};
-    return n + (ords[n % 100] || 'th');
+    if (n==='DNF') {
+      return 'DNF';
+    } else {
+      return n + (ords[n % 100] || 'th');
+    }
   }
 
 
@@ -116,13 +120,17 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     self.playerPositions[socket.id] = myPos;
     self.myData.position = convertToOrdinal(myPos);
 
-    socket.emit('reached finishline', {id: socket.id, position: myPos});
-
+    socket.emit('race over', {id: socket.id, position: myPos});
   }
 
 
   function endGame() {
-  	console.log('ending game');
+    self.inputText = "";
+    self.incorrect = false;
+    self.inputDisabled = true;
+
+    self.myData.position = 'DNF';
+    socket.emit('race over', {id: socket.id, position: 'DNF'});
   }
 
   self.startTimer = function(duration) {
@@ -149,13 +157,12 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
           self.currentState = 'racing'
   				self.startTimer(10);
   			} else if (self.currentState==='finished') {
-  				self.inputText = "";
-          self.incorrect = false;
-  				self.inputDisabled = true;
   				$interval.cancel(timerInterval);
   				self.gameRunning = false;
   			}	else if (self.currentState==='racing') {
-          console.log('out of time');
+          $interval.cancel(timerInterval);
+          self.gameRunning = false;
+          endGame();
         }
   		}
   	}, 1000);
@@ -199,6 +206,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   socket.on('player finished', function(data) {
     self.playerPositions[data.id] = data.position;
     self.playerData[data.id].position = convertToOrdinal(data.position);
+    $scope.$apply();
   })
 
   socket.on('show marker', function() {
