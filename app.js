@@ -71,15 +71,21 @@ io.on('connection', function(socket){
     });
 
   socket.on('start game', function() {
-    io.sockets.in('default').emit('start game')
+    io.sockets.in('default').emit('start game');
   })
 
-  socket.on('update progress', function(data) {
-    socket.broadcast.to('default').emit('update progress (remote)', data);
+  socket.on('update markers', function(data) {
+    socket.broadcast.to('default').emit('update markers', data);
   });
+
+  socket.on('reached finish', function(data) {
+    socket.broadcast.to('default').emit('player finished', data);
+  })
+
 
   socket.on('race over', function(data) {
     socket.broadcast.to('default').emit('player finished', data);
+    io.sockets.in('default').emit('end game');
   })
 
 

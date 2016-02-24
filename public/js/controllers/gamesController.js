@@ -34,6 +34,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   self.incorrect = false;
 
   self.gameRunning = false;
+  self.nowRacing = false;
 
   var nextWord = "";
 
@@ -65,7 +66,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
 
   self.calcCompleteness = function() {
     var percentageComplete = (self.typedSoFar.length/paragraphText.length)*100;
-    socket.emit('update progress', {id: socket.id, percentage: percentageComplete});
+    socket.emit('update markers', {id: socket.id, percentage: percentageComplete});
     self.myData['percentage'] = percentageComplete;
   }
 
@@ -113,6 +114,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
 
 
   function reachedFinish() {
+    self.nowRacing = false;
     self.inputText = "";
     self.inputDisabled = true;
 
@@ -120,14 +122,15 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     self.playerPositions[socket.id] = myPos;
     self.myData.position = convertToOrdinal(myPos);
 
-    socket.emit('race over', {id: socket.id, position: myPos});
+    socket.emit('reached finish', {id: socket.id, position: myPos});
   }
 
 
-  function endGame() {
+  function didNotFinish() {
     self.inputText = "";
     self.incorrect = false;
     self.inputDisabled = true;
+    self.nowRacing = false;
 
     self.myData.position = 'DNF';
     socket.emit('race over', {id: socket.id, position: 'DNF'});
@@ -158,11 +161,9 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   				self.startTimer(10);
   			} else if (self.currentState==='finished') {
   				$interval.cancel(timerInterval);
-  				self.gameRunning = false;
   			}	else if (self.currentState==='racing') {
           $interval.cancel(timerInterval);
-          self.gameRunning = false;
-          endGame();
+          didNotFinish();
         }
   		}
   	}, 1000);
@@ -174,6 +175,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
 
   self.startGame = function() {
   	self.gameRunning = true;
+    self.nowRacing = true;
   	self.inputDisabled = true;
     
     self.tempName = "";
@@ -201,15 +203,18 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     self.startGame();
   });
 
-  socket.on('update progress (remote)', function(data) {
+  socket.on('update markers', function(data) {
+    //console.log('updating');
     self.playerData[data.id].percentage = data.percentage;
   });
 
   socket.on('player finished', function(data) {
     if (self.gameRunning) {
       
-      if (data.position!=='DNF') self.playerPositions[data.id] = data.position;
-      
+      if (data.position!=='DNF') {
+        self.playerPositions[data.id] = data.position;
+      }
+
       self.playerData[data.id].position = convertToOrdinal(data.position);
       $scope.$apply();
     }
@@ -237,6 +242,12 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
       socket.emit('show marker (remote)', {id: socket.id, name: self.name});
       $scope.$apply();
     }
+  });
+
+  socket.on('end game', function() {
+    console.log('hey');
+    self.gameRunning = false;
+    $scope.$apply();
   })
 
 
