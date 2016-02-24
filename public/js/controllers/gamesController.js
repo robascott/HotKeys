@@ -206,10 +206,14 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   });
 
   socket.on('player finished', function(data) {
-    self.playerPositions[data.id] = data.position;
-    self.playerData[data.id].position = convertToOrdinal(data.position);
-    $scope.$apply();
-  })
+    if (self.gameRunning) {
+      
+      if (data.position!=='DNF') self.playerPositions[data.id] = data.position;
+      
+      self.playerData[data.id].position = convertToOrdinal(data.position);
+      $scope.$apply();
+    }
+  });
 
   socket.on('show marker', function() {
     socket.emit('show marker (remote)', {id: socket.id, name: self.name});
@@ -227,7 +231,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     $scope.$apply();
   });
 
-  socket.on('remove user', function(data) {
+  socket.on('remove user', function() {
     if (!self.gameRunning) {
       self.playerData = {};
       socket.emit('show marker (remote)', {id: socket.id, name: self.name});
