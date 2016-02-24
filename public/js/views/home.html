@@ -5,6 +5,8 @@
 	<input type='submit' value='Update'>
 </form>
 
+<p ng-show='games.waitingToJoin'>Waiting to join</p>
+
 
 <p>{{games.name}}: {{games.myData.percentage}}%, {{games.myData.position}}</p>
 <ul ng-repeat='(id,data) in games.playerData'>

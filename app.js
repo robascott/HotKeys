@@ -60,6 +60,16 @@ io.on('connection', function(socket){
   
   this.emit('show marker');
 
+
+  socket.on('is game running', function() {
+    io.sockets.in('default').emit('get game state');
+  })
+
+
+  socket.on('reporting game state to server', function(data) {
+    io.sockets.in('default').emit('reporting game state to client', data);
+  })
+
   socket.on('show marker (remote)', function(data) {
     socket.broadcast.to('default').emit('show marker (remote)', data);
   })
@@ -80,13 +90,13 @@ io.on('connection', function(socket){
 
   socket.on('reached finish', function(data) {
     socket.broadcast.to('default').emit('player finished', data);
-  })
+  });
 
 
   socket.on('race over', function(data) {
     socket.broadcast.to('default').emit('player finished', data);
     io.sockets.in('default').emit('end game');
-  })
+  });
 
 
   socket.on('update name', function(data) {

@@ -2,8 +2,8 @@ angular
   .module('hotkeys')
   .controller('GamesController', GamesController);
 
-GamesController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$sce', '$interval', 'socket', '$scope'];
-function GamesController(User, TokenService, $state, CurrentUser, $sce, $interval, socket, $scope){
+GamesController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$sce', '$interval', '$timeout', 'socket', '$scope'];
+function GamesController(User, TokenService, $state, CurrentUser, $sce, $interval, $timeout, socket, $scope){
 
   var self = this;
 
@@ -26,6 +26,8 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   self.myData = {percentage: 0};
   self.playerData = {};  // e.g. {234235235: {name: 'Robin', perctentage: 24, position: 1}, 23412353: {name: 'Simon', percentage: 18, position: 2}}
   self.playerPositions = {} // e.g. {234235235: 1, 3452345234: 2}
+  
+  self.noOfPlayersInRound;
 
   self.currentState; // countdown|racing|finished
 
@@ -33,8 +35,30 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
 
   self.incorrect = false;
 
+  
   self.gameRunning = false;
+
+  socket.emit('is game running');
+
+  var responsesArray = [];
+  socket.on('reporting game state to client', function(data) {
+    responsesArray.push(data.gameRunning);
+  });
+
+  $timeout(function() {
+    if (responsesArray.indexOf(true) > -1) {
+      self.gameRunning = true;
+      self.waitingToJoin = true;
+    } else {
+      self.waitingToJoin = false;
+      socket.emit('show marker (remote)', {id: socket.id, name: self.name});
+    }
+  }, 1000);
+
+
+
   self.nowRacing = false;
+  self.waitingToJoin = true;
 
   var nextWord = "";
 
@@ -112,6 +136,16 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     }
   }
 
+  function playersLeftInRace() {
+    var finishedPlayers = 0;
+    Object.keys(self.playerData).forEach(function(id) {
+      if (self.playerData[id].position) {
+        finishedPlayers++;
+      }
+    });
+    return self.noOfPlayersInRound - finishedPlayers;
+  }
+
 
   function reachedFinish() {
     self.nowRacing = false;
@@ -122,7 +156,11 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     self.playerPositions[socket.id] = myPos;
     self.myData.position = convertToOrdinal(myPos);
 
-    socket.emit('reached finish', {id: socket.id, position: myPos});
+    if (playersLeftInRace()===0) {
+      socket.emit('race over', {id: socket.id, position: myPos});
+    } else {
+      socket.emit('reached finish', {id: socket.id, position: myPos});
+    }
   }
 
 
@@ -177,6 +215,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   	self.gameRunning = true;
     self.nowRacing = true;
   	self.inputDisabled = true;
+    self.noOfPlayersInRound = Object.keys(self.playerData).length;
     
     self.tempName = "";
     self.inputText = "";
@@ -204,7 +243,6 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   });
 
   socket.on('update markers', function(data) {
-    //console.log('updating');
     self.playerData[data.id].percentage = data.percentage;
   });
 
@@ -225,8 +263,11 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     $scope.$apply();
   });
 
+
   socket.on('show marker', function() {
-    socket.emit('show marker (remote)', {id: socket.id, name: self.name});
+    if (!self.waitingToJoin) {
+      socket.emit('show marker (remote)', {id: socket.id, name: self.name});
+    }
   });
 
   socket.on('show marker (remote)', function(data) {
@@ -249,8 +290,17 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     }
   });
 
+  socket.on('get game state', function() {
+    socket.emit('reporting game state to server', {gameRunning: self.gameRunning});
+  });
+
   socket.on('end game', function() {
     self.gameRunning = false;
+    console.log('game ended');
+    if (self.waitingToJoin) {
+      socket.emit('show marker (remote)', {id: socket.id, name: self.name});
+      self.waitingToJoin = false;
+    }
     $scope.$apply();
   })
 
