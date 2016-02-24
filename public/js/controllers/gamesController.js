@@ -72,10 +72,10 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   self.updateState = function() {
   	if (nextWord.lastIndexOf(self.inputText, 0) === 0) {
   		self.incorrect = false
-      self.calcCompleteness();
   		paragraphHtmlArray[wordIndex+1] = "<span class='correct'>" + nextWord.trim() + "</span>";
   		if (self.inputText.length == nextWord.length) {
   			self.typedSoFar += self.inputText;
+        self.calcCompleteness();
   			paragraphHtmlArray[wordIndex+1] = "<span>" + nextWord + "</span>";
   			wordIndex++;
   			if (wordIndex===paragraphWords.length) {
@@ -174,6 +174,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     self.typedSoFar = "";
     self.wpm = "0";
     self.myData = {percentage: 0};
+    self.playerPositions = {};
   	wordIndex = 0;
 
 

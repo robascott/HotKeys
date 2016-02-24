@@ -6,10 +6,10 @@
 </form>
 
 
-<p>{{games.name}}: {{games.myData.percentage}}%, Pos:{{games.myData.position}}</p>
+<p>{{games.name}}: {{games.myData.percentage}}%, {{games.myData.position}}</p>
 <ul ng-repeat='(id,data) in games.playerData'>
 	<li>
-		<p>{{data.name}}: {{data.percentage}}%, Pos: {{data.position}}</p>
+		<p>{{data.name}}: {{data.percentage}}%, {{data.position}}</p>
 	</li>
 </ul>
 
