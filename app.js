@@ -66,7 +66,7 @@ io.on('connection', function(socket){
   
   socket.on('disconnect', function() {
       console.log('user disconnected');
-      socket.broadcast.to('default').emit('player finished', {id:socket.id.substring(2), position:'DNF'});
+      socket.broadcast.to('default').emit('player left', {id:socket.id.substring(2), position:'DNF'});
       socket.broadcast.to('default').emit('remove user');
     });
 

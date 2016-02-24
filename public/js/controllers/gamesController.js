@@ -208,16 +208,21 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     self.playerData[data.id].percentage = data.percentage;
   });
 
-  socket.on('player finished', function(data) {
-    if (self.gameRunning) {
-      
-      if (data.position!=='DNF') {
-        self.playerPositions[data.id] = data.position;
-      }
 
+  socket.on('player left', function(data) {
+    if (self.gameRunning) {
       self.playerData[data.id].position = convertToOrdinal(data.position);
       $scope.$apply();
     }
+  });
+
+  socket.on('player finished', function(data) {
+    if (data.position!=='DNF') {
+      self.playerPositions[data.id] = data.position;
+    }
+
+    self.playerData[data.id].position = convertToOrdinal(data.position);
+    $scope.$apply();
   });
 
   socket.on('show marker', function() {
@@ -225,7 +230,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   });
 
   socket.on('show marker (remote)', function(data) {
-    self.playerData[data.id] = {}
+    self.playerData[data.id] = {};
     self.playerData[data.id].percentage = 0;
     self.playerData[data.id].name = data.name;
     $scope.$apply();
@@ -245,7 +250,6 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   });
 
   socket.on('end game', function() {
-    console.log('hey');
     self.gameRunning = false;
     $scope.$apply();
   })
