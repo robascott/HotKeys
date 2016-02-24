@@ -181,9 +181,11 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     self.typedSoFar = "";
     self.wpm = "0";
     self.myData = {percentage: 0};
+    self.playerData = {};
     self.playerPositions = {};
   	wordIndex = 0;
 
+    socket.emit('show marker (remote)', {id: socket.id, name: self.name});
 
   	nextWord = paragraphText.split(" ")[0] + " ";
   	paragraphHtmlArray = paragraphText.split(" ");
