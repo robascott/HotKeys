@@ -10,7 +10,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   self.inputDisabled = true;
 
   //var paragraphText = "Five members of the Friends cast have finally come together in a much-anticipated Friends reunion on US TV. The cast of the 1990s hit comedy, minus Matthew Perry, reunited on NBC's Tribute to James Burrows on Sunday. They reminisced during the two-hour tribute that featured clips from the respected director's roster of shows.";
-  var paragraphText = "This is a test";
+  var paragraphText = "Drivers could battle it out in a new elimination-style qualifying format when the Formula 1 season gets under way in Australia next month.";
   var paragraphWords = paragraphText.split(" ");
   var wordIndex = 0;
 
@@ -18,12 +18,11 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
 
   self.inputText = "";
   self.typedSoFar = "";
-  self.wpm = "0";
 
   self.tempName = "";
   self.name = Math.random().toString(36).substr(2, 5);
 
-  self.myData = {percentage: 0};
+  self.myData = {percentage: 0, wpm: 0};
   self.playerData = {};  // e.g. {234235235: {name: 'Robin', perctentage: 24, position: 1}, 23412353: {name: 'Simon', percentage: 18, position: 2}}
   self.playerPositions = {} // e.g. {234235235: 1, 3452345234: 2}
   
@@ -85,12 +84,12 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   }
 
   self.calcWpm = function(time) {
-  	self.wpm = Math.floor((self.typedSoFar.length*1.0/5)/time);
+  	self.myData['wpm'] = Math.floor((self.typedSoFar.length*1.0/5)/time);
   }
 
   self.calcCompleteness = function() {
     var percentageComplete = (self.typedSoFar.length/paragraphText.length)*100;
-    socket.emit('update markers', {id: socket.id, percentage: percentageComplete});
+    socket.emit('update markers', {id: socket.id, percentage: percentageComplete, wpm: self.calcWpm});
     self.myData['percentage'] = percentageComplete;
   }
 
@@ -196,7 +195,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   				self.inputDisabled = false;
   				$interval.cancel(timerInterval);
           self.currentState = 'racing'
-  				self.startTimer(10);
+  				self.startTimer(15);
   			} else if (self.currentState==='finished') {
   				$interval.cancel(timerInterval);
   			}	else if (self.currentState==='racing') {
@@ -220,8 +219,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     self.tempName = "";
     self.inputText = "";
     self.typedSoFar = "";
-    self.wpm = "0";
-    self.myData = {percentage: 0};
+    self.myData = {percentage: 0, wpm: 0};
     self.playerData = {};
     self.playerPositions = {};
   	wordIndex = 0;
@@ -244,6 +242,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
 
   socket.on('update markers', function(data) {
     self.playerData[data.id].percentage = data.percentage;
+    self.playerData[data.id].wpm = data.wpm
   });
 
 
@@ -273,6 +272,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   socket.on('show marker (remote)', function(data) {
     self.playerData[data.id] = {};
     self.playerData[data.id].percentage = 0;
+    self.playerData[data.id].wpm = 0;
     self.playerData[data.id].name = data.name;
     $scope.$apply();
   });

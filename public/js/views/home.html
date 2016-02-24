@@ -8,10 +8,10 @@
 <p ng-show='games.waitingToJoin'>Waiting to join</p>
 
 
-<p>{{games.name}}: {{games.myData.percentage}}%, {{games.myData.position}}</p>
+<p>{{games.name}}: {{games.myData.percentage}}%, WPM: {{games.myData.wpm}} | {{games.myData.position}}</p>
 <ul ng-repeat='(id,data) in games.playerData'>
 	<li>
-		<p>{{data.name}}: {{data.percentage}}%, {{data.position}}</p>
+		<p>{{data.name}}: {{data.percentage}}%, WPM: {{data.wpm}} | {{data.position}}</p>
 	</li>
 </ul>
 
@@ -20,7 +20,7 @@
 </div>
 
 <div id='wpm-container'>
-	<p id='wpm-text'>WPM: {{games.wpm}}</p>
+	<p id='wpm-text'>WPM: {{games.myData.wpm}}</p>
 </div>
 
 

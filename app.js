@@ -60,7 +60,6 @@ io.on('connection', function(socket){
   
   this.emit('show marker');
 
-
   socket.on('is game running', function() {
     io.sockets.in('default').emit('get game state');
   })
