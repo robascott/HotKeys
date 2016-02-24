@@ -17,7 +17,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
 
   self.inputText = "";
   self.typedSoFar = "";
-  self.wpm = "";
+  self.wpm = "0";
 
   self.tempName = "";
   self.name = Math.random().toString(36).substr(2, 5);
@@ -61,11 +61,16 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   	self.wpm = Math.floor((self.typedSoFar.length*1.0/5)/time);
   }
 
+  self.calcCompleteness = function() {
+    var percentageComplete = (self.typedSoFar.length/paragraphText.length)*100;
+    socket.emit('update progress', {id: socket.id, percentage: percentageComplete});
+    self.myData['percentage'] = percentageComplete;
+  }
+
   self.updateState = function() {
   	if (nextWord.lastIndexOf(self.inputText, 0) === 0) {
-      socket.emit('update progress', {id: socket.id, percentage: ((self.typedSoFar.length/paragraphText.length)*100)});
-      self.myData['percentage'] = (self.typedSoFar.length/paragraphText.length)*100;
   		self.incorrect = false
+      self.calcCompleteness();
   		paragraphHtmlArray[wordIndex+1] = "<span class='correct'>" + nextWord.trim() + "</span>";
   		if (self.inputText.length == nextWord.length) {
   			self.typedSoFar += self.inputText;
@@ -103,8 +108,8 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   		minutes = parseInt(timer / 60, 10);
   		seconds = parseInt(timer % 60, 10);
 
-  		if (mode=='end' && (seconds % 2 == 0)) {
-  			var minutesElapsed = ((duration-seconds)*1.0)/60;  // need to account for minutes
+  		if (mode=='end' && (duration-timer >= 2 && seconds % 2 == 0)) {
+  			var minutesElapsed = ((duration-timer)*1.0)/60;
   			self.calcWpm(minutesElapsed);
   		}
 
@@ -122,6 +127,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   				self.startTimer(10,'end');
   			} else if (mode==='end') {
   				self.inputText = "";
+          self.incorrect = false;
   				self.inputDisabled = true;
   				$interval.cancel(timerInterval);
   				self.gameRunning = false;
