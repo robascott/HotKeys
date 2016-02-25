@@ -32,4 +32,6 @@ angular
       });
 
     $urlRouterProvider.otherwise("/");
+
+    
   }

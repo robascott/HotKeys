@@ -25,6 +25,7 @@
   <script src="./js/controllers/usersController.js"></script>
   <script src="./js/controllers/gamesController.js"></script>
   <script src="./js/controllers/racesController.js"></script>
+  <script src="./js/controllers/navController.js"></script>
   <script src="./js/services/socketFactory.js"></script>
 
   <!-- Stylesheets -->
@@ -34,9 +35,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 
 </head>
-<body ng-controller="UsersController as users">
+<body>
   <header>
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default" ng-controller='NavController as nav'>
       <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -52,19 +53,19 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            <li ng-show="users.checkLoggedIn()">
+            <li ng-show="nav.checkLoggedIn()">
               <a href="#" ui-sref="users">Users</a>
             </li>
-            <li ng-show="users.checkLoggedIn()">
-              <a href="#" ng-click='users.getLoggedInUser()' ui-sref="profile">Profile</a>
+            <li ng-show="nav.checkLoggedIn()">
+              <a href="#" ui-sref="profile">Profile</a>
             </li>
-            <li ng-hide="users.checkLoggedIn()">
+            <li ng-hide="nav.checkLoggedIn()">
               <a href="#" ui-sref="login">Login</a>
             </li>
-            <li ng-hide="users.checkLoggedIn()">
+            <li ng-hide="nav.checkLoggedIn()">
               <a href="#" ui-sref="register">Register</a>
             </li>
-            <li ng-show="users.checkLoggedIn()">
+            <li ng-show="nav.checkLoggedIn()">
               <a href="#"ui-sref="home" ng-click="users.logout()">Logout</a>
             </li>
           </ul>

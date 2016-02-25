@@ -3,8 +3,8 @@ angular
   .controller('UsersController', UsersController);
 
 // Here we inject the currentUser service to access the current user
-UsersController.$inject = ['User', 'TokenService', '$state', 'CurrentUser'];
-function UsersController(User, TokenService, $state, CurrentUser){
+UsersController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$scope', '$timeout'];
+function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeout){
 
   var self = this;
 
@@ -14,10 +14,56 @@ function UsersController(User, TokenService, $state, CurrentUser){
   self.getUsers      = getUsers;
   self.register      = register;
   self.deleteUser    = deleteUser;
-  self.getLoggedInUser = getLoggedInUser
+  //self.getLoggedInUser = getLoggedInUser
   self.login         = login;
   self.logout        = logout;
   self.checkLoggedIn = checkLoggedIn;
+  self.isWaiting = true
+
+  // $scope.$on('$viewContentLoaded', function (event , viewConfig) {
+  //     alert('hey');
+  //     $timeout(function() {
+  //               console.log(document.getElementById('wpmChart'));
+  //               var ctx = document.getElementById("wpmChart").getContext("2d");
+  //     },0);
+  // });
+
+
+
+  $timeout(function() {
+    if ($state.current.name=='profile') {
+      console.log(document.getElementById('wpmChart'));
+      var ctx = document.getElementById("wpmChart").getContext("2d");
+
+      var data = {
+        labels: [],
+        datasets: [
+          {
+            label: "WPMs",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: []
+          }
+        ]
+      };
+
+      var wpmLineChart = new Chart(ctx).Line(data); // options is 2nd argument
+
+      var races = self.user.races
+
+      races.forEach(function(race) {
+        if (race.wpm) {
+          wpmLineChart.addData([race.wpm], "");
+        }
+      });
+
+    }  
+  },1000);
+
 
   function getUsers() {
     User.query(function(data){
@@ -25,43 +71,6 @@ function UsersController(User, TokenService, $state, CurrentUser){
     });
   }
 
-
-  function getLoggedInUser() {
-    //console.log(CurrentUser.getUser());
-    User.get({id: CurrentUser.getUser()._id}, function(user) {
-      self.user = user;
-      
-      wpms = user.races;
-      console.log(wpms);
-
-    });
-
-    
-    //console.log(document.getElementById('wpmChart'));
-    //var ctx = document.getElementById("wpmChart").getContext("2d");
-
-      //var wpmLineChart = new Chart(ctx).Line(data, options);
-
-    // var data = {
-    //     labels: ["January", "February", "March", "April", "May", "June", "July"],
-    //     datasets: [
-    //         {
-    //             label: "WPMs",
-    //             fillColor: "rgba(220,220,220,0.2)",
-    //             strokeColor: "rgba(220,220,220,1)",
-    //             pointColor: "rgba(220,220,220,1)",
-    //             pointStrokeColor: "#fff",
-    //             pointHighlightFill: "#fff",
-    //             pointHighlightStroke: "rgba(220,220,220,1)",
-    //             data: [65, 59, 80, 81, 56, 55, 40]
-    //         }
-    //     ]
-    // };
-
-
-
-    
-  }
 
   function handleLogin(res) {
     var token = res.token ? res.token : null;
@@ -106,8 +115,13 @@ function UsersController(User, TokenService, $state, CurrentUser){
   }
 
   if (!!CurrentUser.getUser()) {
-    self.user = CurrentUser.getUser();
+    //self.user = CurrentUser.getUser();
     self.getUsers();
+
+    User.get({id: CurrentUser.getUser()._id}, function(user) {
+      self.user = user;
+
+    });
   }
 
   return self;

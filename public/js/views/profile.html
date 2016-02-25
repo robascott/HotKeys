@@ -1,4 +1,4 @@
-<section ng-show="users.checkLoggedIn()">
+<section ng-show="users.checkLoggedIn()" ng-controller="UsersController as users">
   <div class="row">
     <div class="col-sm-6 col-md-4">
       <img ng-src="{{ users.user.local.image }}">
@@ -12,7 +12,7 @@
         </ul>
 
 
-        <canvas id="wpmChart" width="400" height="400"></canvas>
+        <canvas id="wpmChart" width="800px" height="400"></canvas>  
       </div>
     </div>
   </div>

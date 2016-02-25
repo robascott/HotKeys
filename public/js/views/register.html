@@ -1,4 +1,4 @@
-<section ng-hide="users.checkLoggedIn()">
+<section ng-hide="users.checkLoggedIn()" ng-controller='UsersController as users'>
   <h2>Register</h2>
 
   <form id="login" name="users.registerForm" ng-submit="users.register()" novalidate>
