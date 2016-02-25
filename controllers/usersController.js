@@ -1,4 +1,5 @@
 var User   = require('../models/user');
+var Race   = require('../models/race');
 
 function usersIndex(req, res) {
   User.find(function(err, users){
@@ -8,9 +9,9 @@ function usersIndex(req, res) {
 }
 
 function usersShow(req, res){
-  User.findById(req.params.id, function(err, user){
+  User.findById(req.params.id).populate('races').exec(function(err, user){
     if (err) return res.status(404).json({message: 'Something went wrong.'});
-    res.status(200).json({ user: user });
+    res.status(200).send(user);
   });
 }
 
@@ -31,9 +32,16 @@ function usersUpdate(req, res){
 }
 
 function usersDelete(req, res){
-  User.findByIdAndRemove({_id: req.params.id}, function(err){
-   if (err) return res.status(404).json({message: 'Something went wrong.'});
-   res.status(200).json({message: 'User has been successfully deleted'});
+  User.findByIdAndRemove({_id: req.params.id}, function(err, user) {
+    if (err) return res.status(500).json({message: "Something went wrong!"});
+
+    Race.find({user: user._id}, function(err, races) {
+      races.forEach(function(race) {
+        race.remove();
+      })
+    });
+
+    res.status(200).json({message: 'User has been successfully deleted'});
   });
 }
 

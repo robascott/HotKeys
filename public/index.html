@@ -19,8 +19,10 @@
   <script src="./js/services/authInterceptor.js"></script>
   <script src="./js/services/currentUser.js"></script>
   <script src="./js/models/user.js"></script>
+  <script src="./js/models/race.js"></script>
   <script src="./js/controllers/usersController.js"></script>
   <script src="./js/controllers/gamesController.js"></script>
+  <script src="./js/controllers/racesController.js"></script>
   <script src="./js/services/socketFactory.js"></script>
 
   <!-- Stylesheets -->
@@ -49,7 +51,7 @@
               <a href="#" ui-sref="users">Users</a>
             </li>
             <li ng-show="users.checkLoggedIn()">
-              <a href="#" ui-sref="profile">Profile</a>
+              <a href="#" ng-click='users.getLoggedInUser()' ui-sref="profile">Profile</a>
             </li>
             <li ng-hide="users.checkLoggedIn()">
               <a href="#" ui-sref="login">Login</a>
@@ -66,7 +68,10 @@
     </nav>
   </header>
 
-  <main class="container" ng-controller="GamesController as games" ui-view></main>
+  <main class="container" ng-controller="GamesController as games">
+    <section ng-controller="RacesController as races" ui-view>
+    </section>
+  </main>
 
 </body>
 </html>

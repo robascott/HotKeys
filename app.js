@@ -15,6 +15,7 @@ var io             = require('socket.io').listen(http);
 
 var config         = require('./config/config');
 var User           = require('./models/user');
+var Race           = require('./models/race');
 var secret         = require('./config/config').secret;
 
 mongoose.connect(config.database);

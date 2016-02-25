@@ -2,15 +2,18 @@ angular
   .module('hotkeys')
   .controller('GamesController', GamesController);
 
-GamesController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$sce', '$interval', '$timeout', 'socket', '$scope'];
-function GamesController(User, TokenService, $state, CurrentUser, $sce, $interval, $timeout, socket, $scope){
+GamesController.$inject = ['User', 'Race', 'TokenService', '$state', 'CurrentUser', '$sce', '$interval', '$timeout', 'socket', '$scope'];
+function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $interval, $timeout, socket, $scope){
 
   var self = this;
+
+  self.loggedIn = !!CurrentUser.getUser();
 
   self.inputDisabled = true;
 
   //var paragraphText = "Five members of the Friends cast have finally come together in a much-anticipated Friends reunion on US TV. The cast of the 1990s hit comedy, minus Matthew Perry, reunited on NBC's Tribute to James Burrows on Sunday. They reminisced during the two-hour tribute that featured clips from the respected director's roster of shows.";
-  var paragraphText = "Drivers could battle it out in a new elimination-style qualifying format when the Formula 1 season gets under way in Australia next month.";
+  //var paragraphText = "Drivers could battle it out in a new elimination-style qualifying format when the Formula 1 season gets under way in Australia next month.";
+  var paragraphText = "This is a test sentence";
   var paragraphWords = paragraphText.split(" ");
   var wordIndex = 0;
 
@@ -20,7 +23,12 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   self.typedSoFar = "";
 
   self.tempName = "";
-  self.name = Math.random().toString(36).substr(2, 5);
+
+  if (self.loggedIn) {
+    self.name = CurrentUser.getUser().local.username;
+  } else {
+    self.name = Math.random().toString(36).substr(2, 5);
+  }
 
   self.myData = {percentage: 0, wpm: 0};
   self.playerData = {};  // e.g. {234235235: {name: 'Robin', perctentage: 24, position: 1}, 23412353: {name: 'Simon', percentage: 18, position: 2}}
@@ -145,6 +153,13 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     return self.noOfPlayersInRound - finishedPlayers;
   }
 
+  function saveRace(race) {
+    var race = { race: { wpm: parseInt(self.myData.wpm), user: CurrentUser.getUser()._id } };
+
+    Race.save(race, function(data) {
+    })
+  }
+
 
   function reachedFinish() {
     self.nowRacing = false;
@@ -156,9 +171,14 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
     self.myData.position = convertToOrdinal(myPos);
 
     if (playersLeftInRace()===0) {
+      // should cancel timer interval here
       socket.emit('race over', {id: socket.id, position: myPos});
     } else {
       socket.emit('reached finish', {id: socket.id, position: myPos});
+    }
+
+    if (self.loggedIn) {
+      saveRace();
     }
   }
 
@@ -179,7 +199,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   		minutes = parseInt(timer / 60, 10);
   		seconds = parseInt(timer % 60, 10);
 
-  		if (self.currentState=='racing' && (duration-timer >= 2 && seconds % 2 == 0)) {
+  		if (self.currentState=='racing' && (duration-timer >= 1)) {
   			var minutesElapsed = ((duration-timer)*1.0)/60;
   			self.calcWpm(minutesElapsed);
   		}
@@ -195,7 +215,7 @@ function GamesController(User, TokenService, $state, CurrentUser, $sce, $interva
   				self.inputDisabled = false;
   				$interval.cancel(timerInterval);
           self.currentState = 'racing'
-  				self.startTimer(15);
+  				self.startTimer(25);
   			} else if (self.currentState==='finished') {
   				$interval.cancel(timerInterval);
   			}	else if (self.currentState==='racing') {

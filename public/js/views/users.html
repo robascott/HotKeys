@@ -6,8 +6,9 @@
       </a>
     </div>
     <div class="media-body">
-      <h4 class="media-heading">{{ user.local.fullname }}</h4>
+      <h4 class="media-heading">{{ user.local.username }}</h4>
       <p>{{ user.local.email }}</p>
+      <input ng-click="users.deleteUser(user)" class="btn btn-danger btn-xs" type="button" value="Delete">
     </div>
   </li>
 </ul>

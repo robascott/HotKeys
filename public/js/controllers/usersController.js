@@ -13,15 +13,26 @@ function UsersController(User, TokenService, $state, CurrentUser){
   self.error         = null;
   self.getUsers      = getUsers;
   self.register      = register;
+  self.deleteUser    = deleteUser;
+  self.getLoggedInUser = getLoggedInUser
   self.login         = login;
   self.logout        = logout;
   self.checkLoggedIn = checkLoggedIn;
 
   function getUsers() {
     User.query(function(data){
-      console.log(data)
       self.all = data;
     });
+  }
+
+
+  function getLoggedInUser() {
+    //console.log(CurrentUser.getUser());
+    User.get({id: CurrentUser.getUser()._id}, function(user) {
+      self.user = user;
+      console.log(self.user);
+    });
+    
   }
 
   function handleLogin(res) {
@@ -41,6 +52,12 @@ function UsersController(User, TokenService, $state, CurrentUser){
   function register() {
     self.error = null;
     User.register(self.user, handleLogin, handleError);
+  }
+
+  function deleteUser(user) {
+    User.delete({id: user._id});
+    var index = self.all.indexOf(user);
+    self.all.splice(index,1);
   }
 
   function login() {

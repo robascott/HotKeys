@@ -10,7 +10,7 @@ function register(req, res, next) {
     if (!user) return res.status(401).json({ message: 'User already exists!' });
 
     // User has authenticated so issue token
-    var token = jwt.sign(user, secret, { expiresIn: 60*60*24 });
+    var token = jwt.sign(user.toJSON(), secret, { expiresIn: 60*60*24 });
 
     // Send back the token to the front-end to store
     return res.status(200).json({
@@ -33,7 +33,7 @@ function login(req, res, next) {
     if (!user) return res.status(403).json({ message: 'No user found.' });
     if (!user.validPassword(req.body.password)) return res.status(403).json({ message: 'Authentication failed.' });
 
-    var token = jwt.sign(user, secret, { expiresIn: 60*60*24 });
+    var token = jwt.sign(user.toJSON(), secret, { expiresIn: 60*60*24 });
 
     return res.status(200).json({
       success: true,

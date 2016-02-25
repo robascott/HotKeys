@@ -1,6 +1,6 @@
-<input ng-click='games.newGame()' type='button' value='New Game'>
+<input ng-click='games.newGame()' type='button' value='New Game' ng-hide='games.waitingToJoin'>
 
-<form ng-submit='games.updateUsername()'>
+<form ng-submit='games.updateUsername()' ng-hide='games.loggedIn'>
 	<input type='text' placeholder='Enter name' ng-model='games.tempName' ng-disabled='games.gameRunning'>
 	<input type='submit' value='Update'>
 </form>
@@ -8,7 +8,7 @@
 <p ng-show='games.waitingToJoin'>Waiting to join</p>
 
 
-<p>{{games.name}}: {{games.myData.percentage}}%, WPM: {{games.myData.wpm}} | {{games.myData.position}}</p>
+<p><strong>{{games.name}}</strong>: {{games.myData.percentage}}%, WPM: {{games.myData.wpm}} | {{games.myData.position}}</p>
 <ul ng-repeat='(id,data) in games.playerData'>
 	<li>
 		<p>{{data.name}}: {{data.percentage}}%, WPM: {{data.wpm}} | {{data.position}}</p>

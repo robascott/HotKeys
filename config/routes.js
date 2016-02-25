@@ -3,6 +3,7 @@ var express = require('express'),
 
 var usersController = require('../controllers/usersController');
 var gameController = require('../controllers/gamesController');
+var racesController = require('../controllers/racesController');
 var authenticationsController = require('../controllers/authenticationsController');
 
 router.post('/login', authenticationsController.login);
@@ -19,5 +20,10 @@ router.route('/users/:id')
   .get(usersController.usersShow)
   .patch(usersController.usersUpdate)
   .delete(usersController.usersDelete)
+
+
+router.route('/races')
+  .post(racesController.racesCreate)
+
 
 module.exports = router;
