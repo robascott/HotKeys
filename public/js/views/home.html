@@ -8,10 +8,19 @@
 <p ng-show='games.waitingToJoin'>Waiting to join</p>
 
 
-<p><strong>{{games.name}}</strong>: {{games.myData.percentage}}%, WPM: {{games.myData.wpm}} | {{games.myData.position}}</p>
+<div class="progress">
+    <div class="progress-bar" role="progressbar" aria-valuenow="{{games.myData.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width:{{games.myData.percentage}}%">
+    	{{games.name}} | {{games.myData.wpm}} WPM | {{games.myData.position}}
+    </div>
+</div>
+
 <ul ng-repeat='(id,data) in games.playerData'>
 	<li>
-		<p>{{data.name}}: {{data.percentage}}%, WPM: {{data.wpm}} | {{data.position}}</p>
+		<div class="progress">
+		    <div class="progress-bar" role="progressbar" aria-valuenow="{{data.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width:{{data.percentage}}%">
+		    	{{data.name}} | {{data.wpm}} WPM | {{data.position}}
+		    </div>
+		</div>
 	</li>
 </ul>
 

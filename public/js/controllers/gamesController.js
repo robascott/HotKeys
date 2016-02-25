@@ -11,10 +11,15 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   self.inputDisabled = true;
 
-  //var paragraphText = "Five members of the Friends cast have finally come together in a much-anticipated Friends reunion on US TV. The cast of the 1990s hit comedy, minus Matthew Perry, reunited on NBC's Tribute to James Burrows on Sunday. They reminisced during the two-hour tribute that featured clips from the respected director's roster of shows.";
-  //var paragraphText = "Drivers could battle it out in a new elimination-style qualifying format when the Formula 1 season gets under way in Australia next month.";
-  var paragraphText = "This is a test sentence";
-  var paragraphWords = paragraphText.split(" ");
+  
+  function getText() {
+    return content[Math.floor(Math.random()*content.length)];
+  }
+
+  var paragraphText;
+
+  //var paragraphText = "This is a test sentence";
+  var paragraphWords;
   var wordIndex = 0;
 
   var paragraphHtmlArray = ""
@@ -227,7 +232,8 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   }
 
   self.newGame = function() {
-    socket.emit('start game');
+    var text = getText();
+    socket.emit('start game', {text: text});
   }
 
   self.startGame = function() {
@@ -256,7 +262,9 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   	self.startTimer(3); // Set timer
   }
 
-  socket.on('start game', function() {
+  socket.on('start game', function(data) {
+    paragraphText = data.text;
+    paragraphWords = paragraphText.split(" ");
     self.startGame();
   });
 

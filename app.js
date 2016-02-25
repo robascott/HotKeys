@@ -80,8 +80,8 @@ io.on('connection', function(socket){
       socket.broadcast.to('default').emit('remove user');
     });
 
-  socket.on('start game', function() {
-    io.sockets.in('default').emit('start game');
+  socket.on('start game', function(data) {
+    io.sockets.in('default').emit('start game', data);
   })
 
   socket.on('update markers', function(data) {
