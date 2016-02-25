@@ -43,3 +43,20 @@ ul {
 	color: red;
 	text-decoration: underline;
 }
+
+.new-game-button {
+	display: block;
+	margin-bottom: 5px;	
+}
+
+.username {
+	display: inline;
+	position: relative;
+	bottom: 8px;
+	margin-left: 8px;
+}
+
+.progress {
+	margin: 2px;
+	display: inline-block;
+}

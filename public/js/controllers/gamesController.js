@@ -18,7 +18,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   var paragraphText;
 
-  //var paragraphText = "This is a test sentence";
   var paragraphWords;
   var wordIndex = 0;
 
@@ -102,7 +101,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   self.calcCompleteness = function() {
     var percentageComplete = (self.typedSoFar.length/paragraphText.length)*100;
-    socket.emit('update markers', {id: socket.id, percentage: percentageComplete, wpm: self.calcWpm});
+    socket.emit('update markers', {id: socket.id, percentage: percentageComplete, wpm: self.myData.wpm});
     self.myData['percentage'] = percentageComplete;
   }
 
@@ -175,8 +174,10 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     self.playerPositions[socket.id] = myPos;
     self.myData.position = convertToOrdinal(myPos);
 
+
     if (playersLeftInRace()===0) {
-      // should cancel timer interval here
+      $interval.cancel(timerInterval);
+      self.timerText = "0:00";
       socket.emit('race over', {id: socket.id, position: myPos});
     } else {
       socket.emit('reached finish', {id: socket.id, position: myPos});
@@ -200,7 +201,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   self.startTimer = function(duration) {
   	var timer = duration, minutes, seconds;
-  	var timerInterval = $interval(function () {
+  	timerInterval = $interval(function () {
   		minutes = parseInt(timer / 60, 10);
   		seconds = parseInt(timer % 60, 10);
 
@@ -232,7 +233,8 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   }
 
   self.newGame = function() {
-    var text = getText();
+    //var text = getText();
+    var text = "This is a test sentence";
     socket.emit('start game', {text: text});
   }
 

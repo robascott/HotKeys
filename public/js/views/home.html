@@ -1,4 +1,4 @@
-<input ng-click='games.newGame()' type='button' value='New Game' ng-hide='games.waitingToJoin'>
+<input class='new-game-button' ng-click='games.newGame()' type='button' value='New Game' ng-hide='games.waitingToJoin'>
 
 <form ng-submit='games.updateUsername()' ng-hide='games.loggedIn'>
 	<input type='text' placeholder='Enter name' ng-model='games.tempName' ng-disabled='games.gameRunning'>
@@ -8,19 +8,21 @@
 <p ng-show='games.waitingToJoin'>Waiting to join</p>
 
 
-<div class="progress">
+<div class="progress" style="width: 600px">
     <div class="progress-bar" role="progressbar" aria-valuenow="{{games.myData.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width:{{games.myData.percentage}}%">
-    	{{games.name}} | {{games.myData.wpm}} WPM | {{games.myData.position}}
+    	{{games.myData.wpm}} WPM | {{games.myData.position}}
     </div>
 </div>
+<p class='username'>{{games.name}}</p>
 
 <ul ng-repeat='(id,data) in games.playerData'>
 	<li>
-		<div class="progress">
+		<div class="progress" style="width: 600px">
 		    <div class="progress-bar" role="progressbar" aria-valuenow="{{data.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width:{{data.percentage}}%">
-		    	{{data.name}} | {{data.wpm}} WPM | {{data.position}}
+		    	{{data.wpm}} WPM | {{data.position}}
 		    </div>
 		</div>
+		<p class='username'>{{data.name}}</p>
 	</li>
 </ul>
 

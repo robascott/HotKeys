@@ -4,12 +4,6 @@
       <img ng-src="{{ users.user.local.image }}">
       <div class="caption">
         <h3>{{ users.user.local.username}}</h3>
-        
-        <ul ng-repeat='race in users.user.races'>
-        	<li>
-        		<p>{{race.wpm}}</p>
-        	</li>
-        </ul>
 
 
         <canvas id="wpmChart" width="800px" height="400"></canvas>  
