@@ -1,3 +1,7 @@
+body {
+	background-color: #ecf0f1;
+}
+
 main {
 	max-width: 80%;
 	margin: 0 auto;
@@ -8,24 +12,50 @@ ul {
 	padding-left: 0;
 }
 
+.race-elements {
+	width: 600px;
+}
+
+.race-info {
+	width: 500px;
+}
+
 #paragraph {
 	width: 500px;
 	height: 200px;
-	border: 1px solid black;
+	border: 1px solid #bdc3c7;
 	padding: 5px;
+	-webkit-box-shadow: 0px 3px 13px -3px #888888;
+	-moz-box-shadow: 0px 3px 13px -3px #888888;
+	box-shadow: 0px 3px 13px -3px #888888;
+	clear: left;
+	clear: right;
+	background-color: white;
 }
 
 #typebox {
 	width: 500px;
 	height: 50px;
-	border: 1px solid black;
+	border: 1px solid #bdc3c7;
 	margin-top: 20px;
 	font-size: 20px;
 	padding: 5px;
+	-webkit-box-shadow: 0px 3px 13px -3px #888888;
+	-moz-box-shadow: 0px 3px 13px -3px #888888;
+	box-shadow: 0px 3px 13px -3px #888888;
 }
 
 #timer-text, #wpm-text {
 	font-size: 20px;
+	display: inline;
+}
+
+#wpm-text {
+	float: left;
+}
+
+#timer-text {
+	float: right;
 }
 
 .input-incorrect {
@@ -46,7 +76,27 @@ ul {
 
 .new-game-button {
 	display: block;
-	margin-bottom: 5px;	
+	margin-bottom: 10px;	
+}
+
+
+ul {
+	margin: 0;
+}
+
+
+.navbar-default {
+	background-color: #3498db;
+	border: 0;
+	border-radius: 0;
+}
+
+.navbar-default, .navbar-brand {
+	color: white !important;
+}
+
+.navbar-nav>li>a {
+	color: white !important;
 }
 
 .username {
@@ -59,4 +109,13 @@ ul {
 .progress {
 	margin: 2px;
 	display: inline-block;
+}
+
+
+.position {
+	font-size: 20px;
+}
+
+.waiting-msg {
+	font-size: 30px;
 }

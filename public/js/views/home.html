@@ -1,42 +1,45 @@
-<input class='new-game-button' ng-click='games.newGame()' type='button' value='New Game' ng-hide='games.waitingToJoin'>
+<input class='new-game-button btn btn-success' ng-click='games.newGame()' type='button' value='New Game' ng-hide='games.waitingToJoin || games.gameRunning'>
 
 <form ng-submit='games.updateUsername()' ng-hide='games.loggedIn'>
 	<input type='text' placeholder='Enter name' ng-model='games.tempName' ng-disabled='games.gameRunning'>
 	<input type='submit' value='Update'>
 </form>
 
-<p ng-show='games.waitingToJoin'>Waiting to join</p>
+<div class='loading' ng-show='games.waitingToJoin'>
+	<p class='waiting-msg'>Waiting to join...</p>
+	<img src='http://media.giphy.com/media/JBeu9q9LC1Kve/giphy.gif' style='width: 40px'>
+</div>
 
+<div class='race-elements' ng-hide='games.waitingToJoin'>
 
-<div class="progress" style="width: 600px">
+<div class="progress" style="width: 500px">
     <div class="progress-bar" role="progressbar" aria-valuenow="{{games.myData.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width:{{games.myData.percentage}}%">
-    	{{games.myData.wpm}} WPM | {{games.myData.position}}
+    	{{games.myData.wpm}} WPM
     </div>
 </div>
-<p class='username'>{{games.name}}</p>
+<p class='username'>{{games.name}} <span class='position'>{{games.myData.position}}</span></p>
 
 <ul ng-repeat='(id,data) in games.playerData'>
 	<li>
-		<div class="progress" style="width: 600px">
+		<div class="progress" style="width: 500px">
 		    <div class="progress-bar" role="progressbar" aria-valuenow="{{data.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width:{{data.percentage}}%">
-		    	{{data.wpm}} WPM | {{data.position}}
+		    	{{data.wpm}} WPM
 		    </div>
 		</div>
-		<p class='username'>{{data.name}}</p>
+		<p class='username'>{{data.name}} <span class='position'>{{data.position}}</span></p>
 	</li>
 </ul>
 
-<div id='timer-container'>
-	<p id='timer-text'>Timer: {{games.timerText}}</p>
-</div>
 
-<div id='wpm-container'>
-	<p id='wpm-text'>WPM: {{games.myData.wpm}}</p>
+<div class='race-info'>
+	<p ng-show="games.currentState=='racing' || games.currentState=='finished'" id='wpm-text'>{{games.myData.wpm}} WPM</p>
+	<p id='timer-text'>{{games.timerText}}</p>
 </div>
 
 
 <div id='paragraph' ng-bind-html="games.renderParagraph()">
 </div>
 
-
 <input focus-on-condition="!games.inputDisabled" id='typebox' ng-class="{'input-incorrect': games.incorrect}" ng-model='games.inputText' type='text' placeholder='Type here' ng-change="games.updateState()" ng-disabled='games.inputDisabled' ng-trim="false">
+
+</div>
