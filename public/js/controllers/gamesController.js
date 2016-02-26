@@ -176,8 +176,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
 
     if (playersLeftInRace()===0) {
-      $interval.cancel(timerInterval);
-      self.timerText = "0:00";
       socket.emit('race over', {id: socket.id, position: myPos});
     } else {
       socket.emit('reached finish', {id: socket.id, position: myPos});
@@ -331,6 +329,8 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
       socket.emit('show marker (remote)', {id: socket.id, name: self.name});
       self.waitingToJoin = false;
     }
+    $interval.cancel(timerInterval);
+    self.timerText = "0:00";
     $scope.$apply();
   })
 
