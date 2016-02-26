@@ -20,6 +20,10 @@ ul {
 	width: 500px;
 }
 
+.name-form {
+	margin-bottom: 10px;
+}
+
 #paragraph {
 	width: 500px;
 	height: 200px;

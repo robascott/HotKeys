@@ -3,8 +3,8 @@ angular
   .controller('UsersController', UsersController);
 
 // Here we inject the currentUser service to access the current user
-UsersController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$scope', '$timeout'];
-function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeout){
+UsersController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$scope', '$timeout', '$route', '$window'];
+function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeout, $route, $window){
 
   var self = this;
 
@@ -16,7 +16,7 @@ function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeo
   self.deleteUser    = deleteUser;
   //self.getLoggedInUser = getLoggedInUser
   self.login         = login;
-  self.logout        = logout;
+  //self.logout        = logout;
   self.checkLoggedIn = checkLoggedIn;
   self.isWaiting = true
 
@@ -77,6 +77,8 @@ function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeo
     if (token) {
       self.getUsers();
       $state.go('home');
+      //$route.reload();
+      $window.location.reload();
     }
     self.user = TokenService.decodeToken();
     CurrentUser.saveUser(self.user);
@@ -102,12 +104,12 @@ function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeo
     User.login(self.user, handleLogin, handleError);
   }
 
-  function logout() {
-    TokenService.removeToken();
-    self.all  = [];
-    self.user = {};
-    CurrentUser.clearUser();
-  }
+  // function logout() {
+  //   TokenService.removeToken();
+  //   self.all  = [];
+  //   self.user = {};
+  //   CurrentUser.clearUser();
+  // }
 
   function checkLoggedIn() {
     var loggedIn = !!TokenService.getToken();

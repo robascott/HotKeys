@@ -1,8 +1,8 @@
 <input class='new-game-button btn btn-success' ng-click='games.newGame()' type='button' value='New Game' ng-hide='games.waitingToJoin || games.gameRunning'>
 
-<form ng-submit='games.updateUsername()' ng-hide='games.loggedIn'>
+<form class='name-form' ng-submit='games.updateUsername()' ng-hide='games.loggedIn || games.gameRunning'>
 	<input type='text' placeholder='Enter name' ng-model='games.tempName' ng-disabled='games.gameRunning'>
-	<input type='submit' value='Update'>
+	<input class='btn btn-info btn-xs' type='submit' value='Update'>
 </form>
 
 <div class='loading' ng-show='games.waitingToJoin'>
@@ -17,7 +17,7 @@
     	{{games.myData.wpm}} WPM
     </div>
 </div>
-<p class='username'>{{games.name}} <span class='position'>{{games.myData.position}}</span></p>
+<p class='username'><strong>{{games.name}}</strong> <span class='position'>{{games.myData.position}}</span></p>
 
 <ul ng-repeat='(id,data) in games.playerData'>
 	<li>
