@@ -32,7 +32,6 @@ function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeo
 
   $timeout(function() {
     if ($state.current.name=='profile') {
-      console.log(document.getElementById('wpmChart'));
       var ctx = document.getElementById("wpmChart").getContext("2d");
 
       var data = {
