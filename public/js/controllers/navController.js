@@ -10,6 +10,7 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
 
   self.checkLoggedIn = checkLoggedIn;
   self.logout = logout;
+  self.reloadHome = reloadHome;
 
   function checkLoggedIn() {
     var loggedIn = !!TokenService.getToken();
@@ -24,6 +25,12 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
     $state.go('home');
     //$route.reload();
     $window.location.reload();
+  }
+
+
+  function reloadHome() {
+  	$route.reload();
+  	$window.location.reload();
   }
 
   return self;

@@ -244,8 +244,8 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   
   // Inform players in room to start new game
   self.newGame = function() {
-    //var text = getText();
-    var text = "This is a test sentence";
+    var text = getText();
+    //var text = "This is a test sentence";
     socket.emit('start game', {text: text});
   }
 
