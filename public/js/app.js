@@ -1,6 +1,6 @@
 angular
   .module('hotkeys', ['ngResource', 'angular-jwt', 'ui.router', 'ngRoute'])
-  .constant('API', 'http://localhost:3000/api')
+  .constant('API', '/api')
   .config(MainRouter)
   .config(function($httpProvider){
     $httpProvider.interceptors.push('authInterceptor');
