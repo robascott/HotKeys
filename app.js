@@ -55,52 +55,66 @@ app.use(function (err, req, res, next) {
 });
 
 io.on('connection', function(socket){
-  socket.join('default');
+  socket.room = 'initRoom';
+
+
+  socket.join(socket.room);
 
   console.log('user connected');
   
-  this.emit('show marker');
+
+  socket.on('switchRoom', function(data){
+    socket.leave(socket.room);
+    socket.join(data.room);
+    socket.room = data.room;
+
+    socket.broadcast.to(socket.room).emit('show marker');
+
+    console.log('room: ' + socket.room);
+    console.log('switched room');
+  })
+
 
   socket.on('is game running', function() {
-    io.sockets.in('default').emit('get game state');
+    io.sockets.in(socket.room).emit('get game state');
   })
 
 
   socket.on('reporting game state to server', function(data) {
-    io.sockets.in('default').emit('reporting game state to client', data);
+    io.sockets.in(socket.room).emit('reporting game state to client', data);
   })
 
   socket.on('show marker (remote)', function(data) {
-    socket.broadcast.to('default').emit('show marker (remote)', data);
+    socket.broadcast.to(socket.room).emit('show marker (remote)', data);
   })
   
   socket.on('disconnect', function() {
       console.log('user disconnected');
-      socket.broadcast.to('default').emit('player left', {id:socket.id.substring(2), position:'DNF'});
-      socket.broadcast.to('default').emit('remove user');
+      socket.broadcast.to(socket.room).emit('player left', {id:socket.id.substring(2), position:'DNF'});
+      socket.broadcast.to(socket.room).emit('remove user');
     });
 
   socket.on('start game', function(data) {
-    io.sockets.in('default').emit('start game', data);
+    io.sockets.in(socket.room).emit('start game', data);
   })
 
   socket.on('update markers', function(data) {
-    socket.broadcast.to('default').emit('update markers', data);
+    socket.broadcast.to(socket.room).emit('update markers', data);
   });
 
   socket.on('reached finish', function(data) {
-    socket.broadcast.to('default').emit('player finished', data);
+    socket.broadcast.to(socket.room).emit('player finished', data);
   });
 
 
   socket.on('race over', function(data) {
-    socket.broadcast.to('default').emit('player finished', data);
-    io.sockets.in('default').emit('end game');
+    socket.broadcast.to(socket.room).emit('player finished', data);
+    io.sockets.in(socket.room).emit('end game');
   });
 
 
   socket.on('update name', function(data) {
-    socket.broadcast.to('default').emit('update name', data);
+    socket.broadcast.to(socket.room).emit('update name', data);
   });
 
 });

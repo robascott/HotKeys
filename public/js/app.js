@@ -14,6 +14,11 @@ angular
         url: "/",
         templateUrl: "./js/views/home.html"
       })
+      .state('game', {
+        url: "/play/:room_id",
+        templateUrl: "./js/views/game.html",
+        controller: "GamesController as games"
+      })
       .state('login', {
         url: "/login",
         templateUrl: "./js/views/login.html"

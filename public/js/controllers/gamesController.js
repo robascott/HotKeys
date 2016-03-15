@@ -14,6 +14,8 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   var paragraphHtmlArray = "";
   var wordIndex = 0;
 
+  self.room = $state.params.room_id;
+
   self.inputText = "";
   self.typedSoFar = "";
 
@@ -43,6 +45,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   self.incorrect = false;
   var nextWord = "";
 
+  socket.emit('switchRoom', {room: self.room});
 
   // Check if race is already in progress
   socket.emit('is game running');
@@ -58,7 +61,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
       self.waitingToJoin = true;
     } else {
       self.waitingToJoin = false;
-      socket.emit('show marker (remote)', {id: socket.id, name: self.name});
+      socket.emit('show marker (remote)', {id: socket.id, name: self.name, room: self.room});
     }
   }, 1000);
 
@@ -223,13 +226,12 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   		seconds = seconds < 10 ? "0" + seconds : seconds;
 
   		self.timerText = minutes + ":" + seconds;
-
-
-  		if (--timer < 0) {
+  		
+      if (--timer < 0) {
   			if (self.currentState==='countdown') {
   				self.inputDisabled = false;
   				$interval.cancel(timerInterval);
-          self.currentState = 'racing'
+          self.currentState = 'racing';
   				self.startTimer(100);
   			} else if (self.currentState==='finished') {
   				$interval.cancel(timerInterval);
@@ -251,6 +253,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   // Reset game state
   self.startGame = function() {
+    console.log('starting');
   	self.gameRunning = true;
     self.nowRacing = true;
   	self.inputDisabled = true;
@@ -308,6 +311,8 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
 
   socket.on('show marker', function() {
+    console.log('recieved show marker message');
+    console.log(self.waitingToJoin);
     if (!self.waitingToJoin) {
       console.log('not waiting');
       socket.emit('show marker (remote)', {id: socket.id, name: self.name});
