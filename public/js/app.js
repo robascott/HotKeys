@@ -6,13 +6,14 @@ angular
     $httpProvider.interceptors.push('authInterceptor');
   });
 
-  MainRouter.$inject = ['$stateProvider', '$urlRouterProvider'];
+  MainRouter.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
 
-  function MainRouter($stateProvider, $urlRouterProvider) {
+  function MainRouter($stateProvider, $urlRouterProvider, $locationProvider) {
     $stateProvider
       .state('home', {
         url: "/",
-        templateUrl: "./js/views/home.html"
+        templateUrl: "./js/views/home.html",
+        controller: "NavController as nav"
       })
       .state('game', {
         url: "/play/:room_id",
@@ -36,7 +37,10 @@ angular
         templateUrl: "./js/views/users.html"
       });
 
-    $urlRouterProvider.otherwise("/");
+    //$urlRouterProvider.otherwise("/");
+
+    // use the HTML5 History API
+    $locationProvider.html5Mode(true);
 
     
   }

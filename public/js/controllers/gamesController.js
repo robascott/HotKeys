@@ -253,7 +253,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   // Reset game state
   self.startGame = function() {
-    console.log('starting');
   	self.gameRunning = true;
     self.nowRacing = true;
   	self.inputDisabled = true;
@@ -311,10 +310,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
 
   socket.on('show marker', function() {
-    console.log('recieved show marker message');
-    console.log(self.waitingToJoin);
     if (!self.waitingToJoin) {
-      console.log('not waiting');
       socket.emit('show marker (remote)', {id: socket.id, name: self.name});
     }
   });

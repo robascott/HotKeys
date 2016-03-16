@@ -70,7 +70,6 @@ io.on('connection', function(socket){
 
     socket.broadcast.to(socket.room).emit('show marker');
 
-    console.log('room: ' + socket.room);
     console.log('switched room');
   })
 
@@ -117,9 +116,27 @@ io.on('connection', function(socket){
     socket.broadcast.to(socket.room).emit('update name', data);
   });
 
+  socket.on('get rooms', function() {
+    var roomsObj = io.sockets.adapter.rooms;
+    var roomsArray = [];
+
+    Object.keys(roomsObj).forEach(function(key) {
+      if (key[0]==='r') {
+        roomsArray.push(key);
+      }
+    });
+
+    console.log(roomsArray);
+  })
+
 });
 
 var routes = require('./config/routes');
 app.use("/api", routes);
+
+app.use(function(req, res) {
+  res.sendfile(__dirname + '/public/index.html');
+});
+
 
 http.listen(process.env.PORT || 3000 )
