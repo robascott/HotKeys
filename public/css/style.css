@@ -13,7 +13,7 @@ ul {
 }
 
 .race-elements {
-	width: 600px;
+	width: 800px;
 }
 
 .race-info {
@@ -90,7 +90,7 @@ ul {
 
 
 .navbar-default {
-	background-color: #3498db;
+	background-color: #e74c3c;
 	border: 0;
 	border-radius: 0;
 }
@@ -99,8 +99,23 @@ ul {
 	color: white !important;
 }
 
+.title {
+	font-family: 'Permanent Marker', cursive;
+}
+
 .navbar-nav>li>a {
 	color: white !important;
+}
+
+#home-title {
+	font-family: 'Rubik', sans-serif;
+	font-size: 40px;
+	margin-bottom: 20px;
+}
+
+#home-intro {
+	font-size: 20px;
+	margin-bottom: 10px;
 }
 
 .username {
@@ -122,4 +137,8 @@ ul {
 
 .waiting-msg {
 	font-size: 30px;
+}
+
+#username {
+	margin-bottom: 30px;
 }
