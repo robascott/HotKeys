@@ -54,14 +54,14 @@ app.use(function (err, req, res, next) {
   next();
 });
 
+
+// Listen on connection event
 io.on('connection', function(socket){
-  socket.room = 'initRoom';
-
-
-  socket.join(socket.room);
 
   console.log('user connected');
   
+  socket.room = 'initRoom';
+  socket.join(socket.room);
 
   socket.on('switchRoom', function(data){
     socket.leave(socket.room);
@@ -71,21 +71,19 @@ io.on('connection', function(socket){
     socket.broadcast.to(socket.room).emit('show marker');
 
     console.log('switched room');
-  })
-
+  });
 
   socket.on('is game running', function() {
     io.sockets.in(socket.room).emit('get game state');
-  })
-
+  });
 
   socket.on('reporting game state to server', function(data) {
     io.sockets.in(socket.room).emit('reporting game state to client', data);
-  })
+  });
 
   socket.on('show marker (remote)', function(data) {
     socket.broadcast.to(socket.room).emit('show marker (remote)', data);
-  })
+  });
   
   socket.on('disconnect', function() {
       console.log('user disconnected');
@@ -95,7 +93,7 @@ io.on('connection', function(socket){
 
   socket.on('start game', function(data) {
     io.sockets.in(socket.room).emit('start game', data);
-  })
+  });
 
   socket.on('update markers', function(data) {
     socket.broadcast.to(socket.room).emit('update markers', data);
@@ -105,12 +103,10 @@ io.on('connection', function(socket){
     socket.broadcast.to(socket.room).emit('player finished', data);
   });
 
-
   socket.on('race over', function(data) {
     socket.broadcast.to(socket.room).emit('player finished', data);
     io.sockets.in(socket.room).emit('end game');
   });
-
 
   socket.on('update name', function(data) {
     socket.broadcast.to(socket.room).emit('update name', data);
@@ -125,8 +121,6 @@ io.on('connection', function(socket){
         roomsArray.push(key);
       }
     });
-
-    console.log(roomsArray);
   })
 
 });

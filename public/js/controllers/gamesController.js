@@ -14,13 +14,14 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   var paragraphHtmlArray = "";
   var wordIndex = 0;
 
+  // Get room name from state params
   self.room = $state.params.room_id;
 
   self.inputText = "";
   self.typedSoFar = "";
 
   self.tempName = "";  // name input
-  self.timerText = ""; //
+  self.timerText = "";
 
   // Set name
   if (self.loggedIn) {
@@ -67,7 +68,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
 
 
-  
   // Get paragraph text
   function getText() {
     return content[Math.floor(Math.random()*content.length)];

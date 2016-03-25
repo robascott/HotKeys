@@ -11,26 +11,66 @@ function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeo
   self.all           = [];
   self.user          = {};
   self.error         = null;
+  
   self.getUsers      = getUsers;
+  self.login         = login;
   self.register      = register;
   self.deleteUser    = deleteUser;
-  //self.getLoggedInUser = getLoggedInUser
-  self.login         = login;
-  //self.logout        = logout;
   self.checkLoggedIn = checkLoggedIn;
-  self.isWaiting = true
-
-  // $scope.$on('$viewContentLoaded', function (event , viewConfig) {
-  //     alert('hey');
-  //     $timeout(function() {
-  //               console.log(document.getElementById('wpmChart'));
-  //               var ctx = document.getElementById("wpmChart").getContext("2d");
-  //     },0);
-  // });
+  self.createGraph   = createGraph;
 
 
+  // Get all users
+  function getUsers() {
+    User.query(function(data){
+      self.all = data;
+    });
+  }
 
-  $timeout(function() {
+  // Login hanlder
+  function handleLogin(res) {
+    var token = res.token ? res.token : null;
+    if (token) {
+      self.getUsers();
+      $state.go('home');
+      $window.location.reload();
+    }
+    self.user = TokenService.decodeToken();
+    CurrentUser.saveUser(self.user);
+  }
+
+  // Error handler
+  function handleError(e) {
+    self.error = "Something went wrong.";
+  }
+
+  // Login
+  function login() {
+    self.error = null;
+    User.login(self.user, handleLogin, handleError);
+  }
+
+  // Register for new account
+  function register() {
+    self.error = null;
+    User.register(self.user, handleLogin, handleError);
+  }
+
+  // Delete user
+  function deleteUser(user) {
+    User.delete({id: user._id});
+    var index = self.all.indexOf(user);
+    self.all.splice(index,1);
+  }
+
+  // Check if there is a user currently logged in
+  function checkLoggedIn() {
+    var loggedIn = !!TokenService.getToken();
+    return loggedIn;
+  }
+
+  // Create graph for profile page
+  function createGraph() {
     if ($state.current.name=='profile') {
       var ctx = document.getElementById("wpmChart").getContext("2d");
 
@@ -60,68 +100,17 @@ function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeo
         }
       });
 
-    }  
-  },1000);
-
-
-  function getUsers() {
-    User.query(function(data){
-      self.all = data;
-    });
-  }
-
-
-  function handleLogin(res) {
-    var token = res.token ? res.token : null;
-    if (token) {
-      self.getUsers();
-      $state.go('home');
-      //$route.reload();
-      $window.location.reload();
     }
-    self.user = TokenService.decodeToken();
-    CurrentUser.saveUser(self.user);
   }
 
-  function handleError(e) {
-    self.error = "Something went wrong.";
-  }
-
-  function register() {
-    self.error = null;
-    User.register(self.user, handleLogin, handleError);
-  }
-
-  function deleteUser(user) {
-    User.delete({id: user._id});
-    var index = self.all.indexOf(user);
-    self.all.splice(index,1);
-  }
-
-  function login() {
-    self.error = null;
-    User.login(self.user, handleLogin, handleError);
-  }
-
-  // function logout() {
-  //   TokenService.removeToken();
-  //   self.all  = [];
-  //   self.user = {};
-  //   CurrentUser.clearUser();
-  // }
-
-  function checkLoggedIn() {
-    var loggedIn = !!TokenService.getToken();
-    return loggedIn;
-  }
-
+  
+  // Check if a user is currently logged in
   if (!!CurrentUser.getUser()) {
-    //self.user = CurrentUser.getUser();
     self.getUsers();
 
     User.get({id: CurrentUser.getUser()._id}, function(user) {
       self.user = user;
-
+      createGraph();
     });
   }
 
