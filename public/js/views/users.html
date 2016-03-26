@@ -1,3 +1,4 @@
+<!-- for testing purposes only -->
 <section ng-controller='UsersController as users'>
   <ul class="media-list">
     <li class="media" ng-repeat="user in users.all">
@@ -9,6 +10,7 @@
       <div class="media-body">
         <h4 class="media-heading">{{ user.local.username }}</h4>
         <p>{{ user.local.email }}</p>
+        <p>{{ user._id }}</p>
         <input ng-click="users.deleteUser(user)" class="btn btn-danger btn-xs" type="button" value="Delete">
       </div>
     </li>

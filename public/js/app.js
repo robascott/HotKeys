@@ -30,7 +30,13 @@ angular
       })
       .state('profile', {
         url: "/profile",
-        templateUrl: "./js/views/profile.html"
+        templateUrl: "./js/views/profile.html",
+        controller: "ProfileController as profile"
+      })
+      .state('user', {
+        url: "/users/:id",
+        templateUrl: "./js/views/profile.html",
+        controller: "ProfileController as profile"
       })
       .state('users', {
         url: "/users",

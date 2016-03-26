@@ -5,7 +5,6 @@ angular
 // Here we inject the currentUser service to access the current user
 UsersController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$scope', '$timeout', '$route', '$window'];
 function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeout, $route, $window){
-
   var self = this;
 
   self.all           = [];
@@ -17,8 +16,6 @@ function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeo
   self.register      = register;
   self.deleteUser    = deleteUser;
   self.checkLoggedIn = checkLoggedIn;
-  self.createGraph   = createGraph;
-
 
   // Get all users
   function getUsers() {
@@ -69,49 +66,9 @@ function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeo
     return loggedIn;
   }
 
-  // Create graph for profile page
-  function createGraph() {
-    if ($state.current.name=='profile') {
-      var ctx = document.getElementById("wpmChart").getContext("2d");
-
-      var data = {
-        labels: [],
-        datasets: [
-          {
-            label: "WPMs",
-            fillColor: "rgba(220,220,220,0.2)",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(220,220,220,1)",
-            data: []
-          }
-        ]
-      };
-
-      var wpmLineChart = new Chart(ctx).Line(data); // options is 2nd argument
-
-      var races = self.user.races
-
-      races.forEach(function(race) {
-        if (race.wpm) {
-          wpmLineChart.addData([race.wpm], "");
-        }
-      });
-
-    }
-  }
-
-  
   // Check if a user is currently logged in
   if (!!CurrentUser.getUser()) {
-    self.getUsers();
-
-    User.get({id: CurrentUser.getUser()._id}, function(user) {
-      self.user = user;
-      createGraph();
-    });
+    getUsers();
   }
 
   return self;

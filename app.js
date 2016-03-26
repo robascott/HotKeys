@@ -9,6 +9,7 @@ var cookieParser   = require("cookie-parser");
 var methodOverride = require("method-override");
 var jwt            = require('jsonwebtoken');
 var expressJWT     = require('express-jwt');
+var favicon        = require('serve-favicon');
 var app            = express();
 var http           = require('http').Server(app);
 var io             = require('socket.io').listen(http);
@@ -36,6 +37,7 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(cors());
 app.use(passport.initialize());
+app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
