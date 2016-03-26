@@ -9,6 +9,8 @@ angular
   MainRouter.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
 
   function MainRouter($stateProvider, $urlRouterProvider, $locationProvider) {
+    $urlRouterProvider.otherwise('/404');
+
     $stateProvider
       .state('home', {
         url: "/",
@@ -41,9 +43,11 @@ angular
       .state('users', {
         url: "/users",
         templateUrl: "./js/views/users.html"
+      })
+      .state("error", {
+        url: "/404",
+        templateUrl: "./js/views/404.html"
       });
-
-    //$urlRouterProvider.otherwise("/");
 
     // use the HTML5 History API
     $locationProvider.html5Mode(true);

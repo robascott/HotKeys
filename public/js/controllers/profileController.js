@@ -73,6 +73,10 @@ function ProfileController(User, TokenService, $state, CurrentUser, $scope, $win
       self.user = user
       createGraph();
       getStats();
+    }, function(res) {
+      if (res.status === 404) {
+        $state.go('error');
+      }
     });
   } else if (!!CurrentUser.getUser()) {
     User.get({id: CurrentUser.getUser()._id}, function(user) {
