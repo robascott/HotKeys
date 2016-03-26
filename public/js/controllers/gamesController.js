@@ -94,14 +94,10 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     }
   }
 
-  // Calculate and set the WPM of player
-  self.calcWpm = function(time) {
-  	self.myData['wpm'] = Math.floor((self.typedSoFar.length*1.0/5)/time);
-  }
 
-
-  // Calculate and set percentage complete
-  self.calcCompleteness = function() {
+  // Calculate WPM and percentage complete
+  self.updateStats = function(time) {
+    self.myData['wpm'] = Math.floor((self.typedSoFar.length*1.0/5)/time);
     var percentageComplete = (self.typedSoFar.length/paragraphText.length)*100;
     socket.emit('update markers', {id: socket.id, percentage: percentageComplete, wpm: self.myData.wpm});
     self.myData['percentage'] = percentageComplete;
@@ -115,7 +111,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   		paragraphHtmlArray[wordIndex+1] = "<span class='correct'>" + nextWord.trim() + "</span>";
   		if (self.inputText.length == nextWord.length) {
   			self.typedSoFar += self.inputText;
-        self.calcCompleteness();
   			paragraphHtmlArray[wordIndex+1] = "<span>" + nextWord + "</span>";
   			wordIndex++;
   			if (wordIndex===paragraphWords.length) {
@@ -219,7 +214,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   		if (self.currentState=='racing' && (duration-timer >= 1)) {
   			var minutesElapsed = ((duration-timer)*1.0)/60;
-  			self.calcWpm(minutesElapsed);
+  			self.updateStats(minutesElapsed);
   		}
 
   		minutes = minutes < 10 ? + minutes : minutes;
