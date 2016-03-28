@@ -1,6 +1,11 @@
-body {
-	background-color: #ecf0f1;
+html {
+	height: 100%;
 }
+
+/*body {
+	height: 100%;
+	background: linear-gradient(180deg, #403F42 50%, #FAF8F9 50%);
+}*/
 
 main {
 	max-width: 80%;
@@ -11,6 +16,7 @@ ul {
 	list-style-type: none;
 	padding-left: 0;
 }
+
 
 .race-elements {
 	width: 800px;
@@ -89,8 +95,38 @@ ul {
 }
 
 
+.brand-hide {
+	display: none;
+}
+
+.navbar-brand {
+	/*height: 50px;*/
+	line-height: 50px;
+}
+
+#logo {
+	width: 45px;
+	margin-top: 20px;
+	margin-right: 20px;
+}
+
+.navbar-nav > li > a {
+   line-height: 40px;
+   font-size: 15px;
+   color: white !important;
+}
+
+.title {
+	font-size: 35px;
+	/*margin-left: 30px !important;*/
+}
+
+.title:hover {
+	color: #e74c3c !important;
+}
+
 .navbar-default {
-	background-color: #e74c3c;
+	background-color: #403F42;
 	border: 0;
 	border-radius: 0;
 }
@@ -103,19 +139,49 @@ ul {
 	font-family: 'Permanent Marker', cursive;
 }
 
-.navbar-nav>li>a {
-	color: white !important;
+#home-title-container {
+	height: 85px;
+	left: 50%;
+	-webkit-transform: translateX(-50%);
+	transform: translateX(-50%);
+	position: absolute;
+	top: calc(40% - 100px);
+	/*top: -webkit-calc(40% - 120px);
+	top: -moz-calc(40% - 120px);
+	top: -o-calc(40% - 120px);*/
+	margin: 0;
+	/*width: 600px;*/
 }
 
 #home-title {
-	font-family: 'Rubik', sans-serif;
-	font-size: 40px;
-	margin-bottom: 20px;
+	font-family: 'Permanent Marker', sans-serif;
+	display: inline;
+	color: #eeeeee;
+	font-size: 75px;
+	float: left;
+	margin: 0;
+}
+
+
+#home-logo {
+	width: 80px;
+	margin-right: 20px;
+	float: left;
+	margin-top: 6px;
 }
 
 #home-intro {
+	color: #403F42;
 	font-size: 20px;
 	margin-bottom: 10px;
+}
+
+#home-bottom-container {
+	position: absolute;
+	top: calc(40% + 40px);
+	/*top: -webkit-calc(40% - 120px);
+	top: -moz-calc(40% - 120px);
+	top: -o-calc(40% - 120px);*/
 }
 
 .username {
@@ -139,6 +205,6 @@ ul {
 	font-size: 30px;
 }
 
-#username {
+#profile-username {
 	margin-bottom: 30px;
 }

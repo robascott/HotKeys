@@ -2,7 +2,6 @@ var express = require('express'),
     router  = express.Router();
 
 var usersController = require('../controllers/usersController');
-var gameController = require('../controllers/gamesController');
 var racesController = require('../controllers/racesController');
 var authenticationsController = require('../controllers/authenticationsController');
 
@@ -14,7 +13,6 @@ router.route('/')
  
 router.route('/users')
   .get(usersController.usersIndex)
-//   .post(usersController.usersCreate)
 
 router.route('/users/:id') 
   .get(usersController.usersShow)
