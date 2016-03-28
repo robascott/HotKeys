@@ -119,7 +119,7 @@ io.on('connection', function(socket){
     var roomsArray = [];
 
     Object.keys(roomsObj).forEach(function(key) {
-      if (key[0]==='r') {
+      if (key[0]!=='/' || key[0]!=='i') {
         roomsArray.push(key);
       }
     });

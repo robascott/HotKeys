@@ -136,7 +136,7 @@ ul {
 }
 
 .title {
-	font-family: 'Permanent Marker', cursive;
+	font-family: 'Permanent Marker', sans-serif;
 }
 
 #home-title-container {
@@ -146,17 +146,17 @@ ul {
 	transform: translateX(-50%);
 	position: absolute;
 	top: calc(40% - 100px);
-	/*top: -webkit-calc(40% - 120px);
-	top: -moz-calc(40% - 120px);
-	top: -o-calc(40% - 120px);*/
+	top: -webkit-calc(40% - 100px);
+	top: -moz-calc(40% - 100px);
+	top: -o-calc(40% - 100px);
 	margin: 0;
-	/*width: 600px;*/
+	width: 450px;
 }
 
 #home-title {
 	font-family: 'Permanent Marker', sans-serif;
 	display: inline;
-	color: #eeeeee;
+	color: #FAF8F9;
 	font-size: 75px;
 	float: left;
 	margin: 0;
@@ -176,13 +176,52 @@ ul {
 	margin-bottom: 10px;
 }
 
-#home-bottom-container {
+#home-tagline {
+	font-family: 'Rubik', sans-serif;
+	font-size: 25px;
+	color: #403F42;
+	top: calc(40% + 10px);
 	position: absolute;
-	top: calc(40% + 40px);
-	/*top: -webkit-calc(40% - 120px);
-	top: -moz-calc(40% - 120px);
-	top: -o-calc(40% - 120px);*/
+	left: 50%;
+	-webkit-transform: translateX(-50%);
+	transform: translateX(-50%);
+	top: -webkit-calc(40% + 10px);
+	top: -moz-calc(40% + 10px);
+	top: -o-calc(40% + 10px);
 }
+
+#home-bottom-container {
+	display: inline-block;
+	position: absolute;
+	top: calc(40% + 110px);
+	top: -webkit-calc(40% + 110px);
+	top: -moz-calc(40% + 110px);
+	top: -o-calc(40% + 110px);
+	left: 50%;
+	-webkit-transform: translateX(-50%);
+	transform: translateX(-50%);
+}
+
+
+.new-room-button {
+	text-decoration: none;
+	border: 1px solid transparent;
+	border-radius: 3px;
+	color: #FAF8F9;
+	background-color: #403F42;
+}
+
+
+#room-input {
+	width: 160px;
+	outline: none;
+	background-color: #FAF8F9;
+	border: 3px solid #403F42;
+	border-style: none none solid none;
+	font-size: 12px;
+	margin-right: 8px;
+}
+
 
 .username {
 	display: inline;
@@ -207,4 +246,16 @@ ul {
 
 #profile-username {
 	margin-bottom: 30px;
+}
+
+
+.noselect {
+	cursor:default;
+  	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  	khtml-user-select: none;    /* Konqueror */
+  	moz-user-select: none;      /* Firefox */
+  	ms-user-select: none;       /* IE/Edge */
+  	user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
 }

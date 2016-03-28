@@ -1,5 +1,5 @@
 angular
-  .module('hotkeys', ['ngResource', 'angular-jwt', 'ui.router', 'ngRoute'])
+  .module('hotkeys', ['ngResource', 'angular-jwt', 'ui.router', 'ngRoute', 'ngMessages'])
   .constant('API', '/api')
   .config(MainRouter)
   .config(function($httpProvider){

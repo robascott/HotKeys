@@ -1,16 +1,22 @@
 <div id='home-title-container'>
-	<img id='home-logo' src="images/logo.png"></img>
-	<h2 id='home-title'>Hot Keys</h2>
+	<img id='home-logo' class='noselect' src="images/logo.png"></img>
+	<h2 id='home-title' class='noselect'>Hot Keys</h2>
 </div>
+
+<p id='home-tagline'>The racing game for serious typists</p>
 
 <div id='home-bottom-container'>
 
-	<p>Race against your friends</p>
+	<p id='home-intro'>Start by clicking the button below</p>
 
-	<p>Sign up to save your scores.</p>
+	<form name='roomForm' ng-submit='nav.enterRoom()'>
+		<input ng-model='nav.roomName' name='room' ng-minlength="5" ng-maxlength="30" reg-exp-require="/^[a-zA-Z0-9]{1,20}$/" type='text' id='room-input' placeholder="Enter room name (optional)" autocomplete="off">
+		<input class='new-room-button' type='submit' value='Create new room'>
+	</form>
 
-	<p id='home-intro'>Click the button below to start racing</p>
-
-	<input ng-click='nav.newRoom()' class='btn btn-success' type='button' value='Create new room'>
+	<div ng-messages="roomForm.room.$error" style="color:maroon" role="alert">
+	    <div ng-message="minlength">Name too short</div>
+	    <div ng-message="maxlength">Name too long</div>
+	</div>
 
 </div>
