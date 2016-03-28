@@ -56,7 +56,6 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
   }
 
   function disconnect() {
-    console.log('hey');
     socket.emit('forceDisconnect');
   }
 

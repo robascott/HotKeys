@@ -177,6 +177,9 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     self.inputText = "";
     self.inputDisabled = true;
 
+    socket.emit('update markers', {id: socket.id, percentage: 100, wpm: self.myData.wpm});
+    self.myData['percentage'] = 100;
+
     var myPos = Object.keys(self.playerPositions).length + 1
     self.playerPositions[socket.id] = myPos;
     self.myData.position = convertToOrdinal(myPos);
@@ -337,7 +340,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   socket.on('end game', function() {
     self.gameRunning = false;
-    console.log('game ended');
     if (self.waitingToJoin) {
       socket.emit('show marker (remote)', {id: socket.id, name: self.name});
       self.waitingToJoin = false;

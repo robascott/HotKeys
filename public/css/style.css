@@ -34,14 +34,15 @@ ul {
 }
 
 .navbar-nav > li > a {
-   /*line-height: 30px;*/
    font-size: 15px;
    color: white !important;
+   font-family: 'Open Sans', sans-serif;
 }
 
 .nav-title {
 	font-size: 35px;
 	margin-left: 50px;
+	padding-top: 13px;
 }
 
 .nav-title:hover {
