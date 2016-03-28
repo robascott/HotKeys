@@ -17,6 +17,39 @@ ul {
 	padding-left: 0;
 }
 
+
+#login-title, #register-title {
+	font-family: 'Rubik', sans-serif;
+	margin-top: 80px;
+	color: #403F42;
+	margin-bottom: 40px;
+	margin-left: 30px;
+}
+
+
+#login-form, #register-form {
+	margin-left: 30px;
+}
+
+#login-form input, #register-form input {
+	color: #403F42; 
+	width: 220px;
+	outline: none;
+	background-color: #FAF8F9;
+	border: 3px solid #403F42;
+	border-style: none none solid none;
+	outline: none;
+}
+
+#login-button, #register-button {
+	text-decoration: none;
+	border: 1px solid transparent;
+	border-radius: 3px;
+	color: #FAF8F9;
+	background-color: #403F42;
+}
+
+
 #footer {
    position:fixed;
    left:0px;
@@ -230,6 +263,14 @@ ul {
 	color: maroon;
 	margin-top: 5px;
 	margin-left: 12px;
+	height: 20px;
+}
+
+#home-signup-prompt {
+	text-align: center;
+	color: #403F42;
+	font-size: 13px;
+	margin-top: 20px;
 }
 
 
