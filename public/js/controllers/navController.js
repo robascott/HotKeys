@@ -14,6 +14,7 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
   self.logout          = logout;
   self.reloadHome      = reloadHome;
   self.enterRoom       = enterRoom;
+  self.disconnect      = disconnect;
   self.listRooms       = listRooms;
   self.getBodyStyle    = getBodyStyle;
 
@@ -38,10 +39,25 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
   
   // Create new room with randomly generated name
   function enterRoom() {
-    if ($scope.roomForm.room.$valid) {
-      $state.go('game', {room_id: self.roomName});
+    if ($scope.roomForm.room.$invalid) { // Invalid input
+      // Do nothing
+    } else {
+      var roomName;
+      if (self.roomName.length>0) {  // Valid and non-empty input
+        // Get name from user input
+      roomName = self.roomName;
+      } else {  // Empty input
+        // Generate random room name
+        roomName = Math.random().toString(36).substr(2, 13);
+      }
+      $state.go('game', {room_id: roomName});
       listRooms();
     }
+  }
+
+  function disconnect() {
+    console.log('hey');
+    socket.emit('forceDisconnect');
   }
 
   // Get a list of the currently active rooms
@@ -66,8 +82,7 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
     }
   }
 
-  // Generate random room name
-  self.roomName = Math.random().toString(36).substr(2, 13);
+  
 
   return self;
 }

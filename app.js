@@ -88,10 +88,14 @@ io.on('connection', function(socket){
   });
   
   socket.on('disconnect', function() {
-      console.log('user disconnected');
-      socket.broadcast.to(socket.room).emit('player left', {id:socket.id.substring(2), position:'DNF'});
-      socket.broadcast.to(socket.room).emit('remove user');
-    });
+    console.log('user disconnected');
+    socket.broadcast.to(socket.room).emit('player left', {id:socket.id.substring(2), position:'DNF'});
+    socket.broadcast.to(socket.room).emit('remove user');
+  });
+
+  socket.on('forceDisconnect', function() {
+    socket.disconnect();
+  })
 
   socket.on('start game', function(data) {
     io.sockets.in(socket.room).emit('start game', data);

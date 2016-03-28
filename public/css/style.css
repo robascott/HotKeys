@@ -17,6 +17,27 @@ ul {
 	padding-left: 0;
 }
 
+#footer {
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   height:30px;
+   width:100%;
+}
+
+#footer-content {
+	float: right;
+	margin-right: 20px;
+}
+
+#footer a, #footer p {
+	font-size: 13px;
+	text-align: right;
+	color: #403F42;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
 
 .race-elements {
 	width: 800px;
@@ -174,6 +195,7 @@ ul {
 	color: #403F42;
 	font-size: 20px;
 	margin-bottom: 10px;
+	text-align: center;
 }
 
 #home-tagline {
@@ -200,6 +222,14 @@ ul {
 	left: 50%;
 	-webkit-transform: translateX(-50%);
 	transform: translateX(-50%);
+	text-align: center;
+}
+
+#home-messages {
+	text-align: left;
+	color: maroon;
+	margin-top: 5px;
+	margin-left: 12px;
 }
 
 

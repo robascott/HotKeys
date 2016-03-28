@@ -57,7 +57,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a ng-class='nav.getBrandStyle()' class="navbar-brand title" href='/' ng-click='nav.reloadHome()'>Hot Keys</a>
+          <a ng-class='nav.getBrandStyle()' class="navbar-brand title" ui-sref="home" ng-click='nav.disconnect()'>Hot Keys</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -70,10 +70,10 @@
               <a href="#" ui-sref="profile">Profile</i></a>
             </li>
             <li ng-hide="nav.checkLoggedIn()">
-              <a href="#" ui-sref="login">Login</a>
+              <a href="#" ui-sref="login" ng-click='nav.disconnect()'>Login</a>
             </li>
             <li ng-hide="nav.checkLoggedIn()">
-              <a href="#" ui-sref="register">Register</a>
+              <a href="#" ui-sref="register" ng-click='nav.disconnect()'>Register</a>
             </li>
             <li ng-show="nav.checkLoggedIn()">
               <a href="#" ui-sref="home" ng-click="nav.logout()">Logout</i></a>
@@ -85,6 +85,10 @@
   </header>
 
   <main ui-view></main>
+
+  <div id='footer'>
+    <p id='footer-content'><a href='https://github.com/robascott/Project4'>GitHub</a> | <a href='http://www.robins.me'>robins.me</a></p>
+  </div>
 
 </body>
 </html>
