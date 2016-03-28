@@ -47,17 +47,17 @@
 <body ng-controller='NavController as nav' ng-style='nav.getBodyStyle()'>
   <header>
     <nav class="navbar navbar-default" >
-      <div class="container">
+      <div class='nav-container'>
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-          <img ng-class='nav.getBrandStyle()' id='logo' class="pull-left" src="images/logo.png"></img>
+          <img ng-class='nav.getBrandStyle()' id='nav-logo' class="pull-left" src="images/logo.png"></img>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a ng-class='nav.getBrandStyle()' class="navbar-brand title" ui-sref="home" ng-click='nav.disconnect()'>Hot Keys</a>
+          <a ng-class='nav.getBrandStyle()' class="navbar-brand nav-title" ui-sref="home" ng-click='nav.disconnect()'>Hot Keys</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -80,7 +80,7 @@
             </li>
           </ul>
         </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
+      </div><!-- /.nav-container-fluid -->
     </nav>
   </header>
 

@@ -30,7 +30,6 @@ function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeo
     if (token) {
       self.getUsers();
       $state.go('home');
-      $window.location.reload();
     }
     self.user = TokenService.decodeToken();
     CurrentUser.saveUser(self.user);
