@@ -5,7 +5,6 @@ angular
 // Here we inject the currentUser service to access the current user
 UsersController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$scope', '$timeout', '$route', '$window', 'socket'];
 function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout, $route, $window, socket){
-
   var self = this;
 
   self.roomName        = "";
@@ -17,6 +16,7 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
   self.leaveRoom       = leaveRoom;
   self.listRooms       = listRooms;
   self.getBodyStyle    = getBodyStyle;
+  self.isAdminMode     = isAdminMode;
 
   // Check if a user is currently logged in
   function checkLoggedIn() {
@@ -65,7 +65,6 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
     socket.emit('get rooms');
   }
 
-
   // Hide nav bar logo and name if on homepage
   function getBrandStyle() {
     if ($state.current.name=='home') {
@@ -82,7 +81,14 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
     }
   }
 
-  
+  // Check whether admin account is logged in
+  function isAdminMode() {
+    if (checkLoggedIn() && CurrentUser.getUser().local.email === "admin@admin.com") {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   return self;
 }

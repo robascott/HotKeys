@@ -9,6 +9,7 @@
 	</form>
 
 	<div class='loading' ng-show='games.waitingToJoin'>
+		<p ng-show='games.gameInProgress'>Game in progress</p>
 		<p class='waiting-msg'>Waiting to join...</p>
 		<img src='http://media.giphy.com/media/JBeu9q9LC1Kve/giphy.gif' style='width: 40px'>
 	</div>
@@ -22,14 +23,15 @@
 		</div>
 		<p class='username'><strong>{{games.name}}</strong> <span class='position'>{{games.myData.position}}</span></p>
 
-		<ul ng-repeat='(id,data) in games.playerData'>
-			<li>
+		<ul>
+			<li ng-repeat='(id,data) in games.playerData'>
 				<div class="progress" style="width: 500px">
 				    <div class="progress-bar" role="progressbar" aria-valuenow="{{data.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width:{{data.percentage}}%">
 				    	{{data.wpm}} WPM
 				    </div>
 				</div>
-				<p class='username'>{{data.name}} <span class='position'>{{data.position}}</span></p>
+				<p ng-show='data.registered' class='username'><a href='/users/{{data.userId}}'>{{data.name}}</a> <span class='position'>{{data.position}}</span></p>
+				<p ng-hide='data.registered' class='username'>{{data.name}} <span class='position'>{{data.position}}</span></p>
 			</li>
 		</ul>
 

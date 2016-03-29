@@ -42,6 +42,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   self.noOfPlayersInRound;
   self.inputDisabled = true;
   self.gameRunning = false;
+  self.gameInProgress = false;
   self.nowRacing = false;
   self.waitingToJoin = true;
   self.incorrect = false;
@@ -60,13 +61,23 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   $timeout(function() {
     if (responsesArray.indexOf(true) > -1) {
       self.gameRunning = true;
+      self.gameInProgress = true;
       self.waitingToJoin = true;
     } else {
       self.waitingToJoin = false;
-      socket.emit('show marker (remote)', {id: socket.id, name: self.name, room: self.room});
+      socket.emit('show marker (remote)', {id: socket.id, name: self.name, registered: self.loggedIn, userId: getUserId()});
     }
   }, 1000);
 
+
+  // Get user id of logged in user
+  function getUserId() {
+    if (self.loggedIn) {
+      return CurrentUser.getUser()._id;
+    } else {
+      return "";
+    }
+  }
 
 
   // Get paragraph text
@@ -260,7 +271,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     self.tempName = "";
     self.inputText = "";
     self.typedSoFar = "";
-    self.myData = {percentage: "", wpm: ""};
+    self.myData = {percentage: "", wpm: "0"};
     self.playerData = {};
     self.playerPositions = {};
   	wordIndex = 0;
@@ -310,15 +321,17 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   socket.on('show marker', function() {
     if (!self.waitingToJoin) {
-      socket.emit('show marker (remote)', {id: socket.id, name: self.name});
+      socket.emit('show marker (remote)', {id: socket.id, name: self.name, registered: self.loggedIn, userId: getUserId()});
     }
   });
 
   socket.on('show marker (remote)', function(data) {
     self.playerData[data.id] = {};
     self.playerData[data.id].percentage = "";
-    self.playerData[data.id].wpm = "";
+    self.playerData[data.id].wpm = "0";
     self.playerData[data.id].name = data.name;
+    self.playerData[data.id].registered = data.registered;
+    self.playerData[data.id].userId = data.userId;
     $scope.$apply();
   });
 
