@@ -2,8 +2,9 @@ angular
   .module('hotkeys')
   .controller('GamesController', GamesController);
 
-GamesController.$inject = ['User', 'Race', 'TokenService', '$state', 'CurrentUser', '$sce', '$interval', '$timeout', 'socket', '$scope'];
-function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $interval, $timeout, socket, $scope){
+GamesController.$inject = ['User', 'Race', 'TokenService', '$state', 'CurrentUser', '$sce', '$interval', '$timeout', 'socket', '$scope', '$window'];
+function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $interval, $timeout, socket, $scope, $window){
+
 
   var self = this;
 
@@ -259,7 +260,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     self.tempName = "";
     self.inputText = "";
     self.typedSoFar = "";
-    self.myData = {percentage: "", wpm: 0};
+    self.myData = {percentage: "", wpm: ""};
     self.playerData = {};
     self.playerPositions = {};
   	wordIndex = 0;
@@ -328,6 +329,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   socket.on('remove user', function() {
     if (!self.gameRunning) {
+      // Refresh player info
       self.playerData = {};
       socket.emit('show marker (remote)', {id: socket.id, name: self.name});
       $scope.$apply();

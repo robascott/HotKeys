@@ -58,7 +58,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a ng-class='nav.getBrandStyle()' class="navbar-brand nav-title" ui-sref="home" ng-click='nav.disconnect()'>Hot Keys</a>
+          <a ng-class='nav.getBrandStyle()' class="navbar-brand nav-title" ui-sref="home" ng-click='nav.leaveRoom()'>Hot Keys</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -71,10 +71,10 @@
               <a href="#" ui-sref="profile">Profile</i></a>
             </li>
             <li ng-hide="nav.checkLoggedIn()">
-              <a href="#" ui-sref="login" ng-click='nav.disconnect()'>Login</a>
+              <a href="#" ui-sref="login" ng-click='nav.leaveRoom()'>Login</a>
             </li>
             <li ng-hide="nav.checkLoggedIn()">
-              <a href="#" ui-sref="register" ng-click='nav.disconnect()'>Sign up</a>
+              <a href="#" ui-sref="register" ng-click='nav.leaveRoom()'>Sign up</a>
             </li>
             <li ng-show="nav.checkLoggedIn()">
               <a href="#" ui-sref="home" ng-click="nav.logout()">Logout</i></a>

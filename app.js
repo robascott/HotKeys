@@ -93,9 +93,24 @@ io.on('connection', function(socket){
     socket.broadcast.to(socket.room).emit('remove user');
   });
 
-  socket.on('forceDisconnect', function() {
-    socket.disconnect();
-  })
+  socket.on('leave room', function(data) {
+    // Update marker
+    socket.broadcast.to(socket.room).emit('player left', {id:socket.id.substring(2), position:'DNF'});
+    socket.broadcast.to(socket.room).emit('remove user');
+
+    // Get list of currently open rooms
+    var roomsObj = io.sockets.adapter.rooms;
+    var roomsArray = [];
+
+    // Remove players from all rooms
+    Object.keys(roomsObj).forEach(function(room) {
+      socket.leave(room);
+    });
+
+    // Rejoin default room
+    socket.room = 'initRoom';
+    socket.join(socket.room);
+  });
 
   socket.on('start game', function(data) {
     io.sockets.in(socket.room).emit('start game', data);

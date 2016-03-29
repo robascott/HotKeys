@@ -14,7 +14,7 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
   self.logout          = logout;
   self.reloadHome      = reloadHome;
   self.enterRoom       = enterRoom;
-  self.disconnect      = disconnect;
+  self.leaveRoom       = leaveRoom;
   self.listRooms       = listRooms;
   self.getBodyStyle    = getBodyStyle;
 
@@ -55,8 +55,9 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
     }
   }
 
-  function disconnect() {
-    socket.emit('forceDisconnect');
+  // Leave game room
+  function leaveRoom() {
+    socket.emit('leave room');
   }
 
   // Get a list of the currently active rooms
