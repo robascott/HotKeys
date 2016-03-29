@@ -37,19 +37,34 @@ function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeo
 
   // Error handler
   function handleError(e) {
-    self.error = "Something went wrong.";
+    var message = e.data.message;
+    if (e.status===403) {
+      self.error = "Incorrect email or password";
+    } else if (e.status===401) {
+      self.error = "User already exists";
+    } else if (e.status===500) {
+      self.error = "Server error. Please try again later"
+    }
   }
 
   // Login
   function login() {
     self.error = null;
-    User.login(self.user, handleLogin, handleError);
+    if ($scope.users.loginForm.$valid) {
+      User.login(self.user, handleLogin, handleError);
+    } else {
+      self.error = "Incorrect email or password";
+    }
   }
 
   // Register for new account
   function register() {
     self.error = null;
-    User.register(self.user, handleLogin, handleError);
+    if ($scope.users.registerForm.$valid) {
+      User.register(self.user, handleLogin, handleError);
+    } else {
+      self.error = "One or more fields invalid"
+    }
   }
 
   // Delete user

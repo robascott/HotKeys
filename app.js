@@ -102,7 +102,7 @@ io.on('connection', function(socket){
     var roomsObj = io.sockets.adapter.rooms;
     var roomsArray = [];
 
-    // Remove players from all rooms
+    // Remove player from all rooms
     Object.keys(roomsObj).forEach(function(room) {
       socket.leave(room);
     });

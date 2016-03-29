@@ -8,27 +8,25 @@ angular
           restrict: "A",
           link: function(scope, elem, attrs, modelCtrl) {
 
-            modelCtrl.$parsers.push(function (inputValue) {
-
-             var transformedInput = inputValue.toLowerCase().replace(/[^a-zA-Z0-9]+/g,''); 
-
-             if (transformedInput!=inputValue) {
-               modelCtrl.$setViewValue(transformedInput);
-               modelCtrl.$render();
-             }         
-
-             return transformedInput;         
+            // Prevent spaces
+            elem.on("keypress", function(event) {
+              if (event.which == 32) {
+                event.preventDefault();
+              }
             });
 
-            // regexp = eval(attrs.regExpRequire);
-            // var char;
-            // elem.on("keypress", function(event) {
-            //     if (event.which != 8) {
-            //       char = String.fromCharCode(event.which);
-            //       if(!regexp.test(elem.val() + char))
-            //           event.preventDefault();
-            //     }
-            // });
+            // Remove non-alphanumeric characters
+            modelCtrl.$parsers.push(function (inputValue) {
+              var transformedInput = inputValue.toLowerCase().replace(/[^a-zA-Z0-9]+/g,''); 
+
+              if (transformedInput!=inputValue) {
+                modelCtrl.$setViewValue(transformedInput);
+                modelCtrl.$render();
+              }         
+
+              return transformedInput;         
+            });
+            
           }
       }
 

@@ -28,8 +28,12 @@ function ProfileController(User, TokenService, $state, CurrentUser, $scope, $win
       totalWpm += race.wpm;
     });
 
-    var averageWpm = totalWpm*1.0 / races.length;
-    self.user.averageWpm = Math.round(averageWpm * 100) / 100;
+    if (races.length === 0) {
+      self.user.averageWpm = 0;
+    } else {
+      var averageWpm = totalWpm*1.0 / races.length;
+      self.user.averageWpm = Math.round(averageWpm * 100) / 100;
+    }
   }
 
   // Create graph for profile page
