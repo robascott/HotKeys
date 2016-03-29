@@ -16,7 +16,7 @@
 
 	<div class='race-elements' ng-hide='games.waitingToJoin'>
 
-		<div class="progress" style="width: 500px">
+		<div class="progress" style="width: 500px; margin-left: 244px;">
 		    <div class="progress-bar" role="progressbar" aria-valuenow="{{games.myData.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width:{{games.myData.percentage}}%">
 		    	{{games.myData.wpm}} WPM
 		    </div>
@@ -25,7 +25,7 @@
 
 		<ul>
 			<li ng-repeat='(id,data) in games.playerData'>
-				<div class="progress" style="width: 500px">
+				<div class="progress" style="width: 500px; margin-left: 244px;">
 				    <div class="progress-bar" role="progressbar" aria-valuenow="{{data.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width:{{data.percentage}}%">
 				    	{{data.wpm}} WPM
 				    </div>
@@ -35,17 +35,19 @@
 			</li>
 		</ul>
 
-
+		<div class='text-areas'>
+		
 		<div class='race-info'>
 			<p ng-show="games.currentState=='racing' || games.currentState=='finished'" id='wpm-text'>{{games.myData.wpm}} WPM</p>
 			<p id='timer-text'>{{games.timerText}}</p>
 		</div>
 
-
 		<div id='paragraph' ng-bind-html="games.renderParagraph()">
 		</div>
 
 		<input focus-on-condition="!games.inputDisabled" id='typebox' ng-class="{'input-incorrect': games.incorrect}" ng-model='games.inputText' type='text' placeholder='Type here' ng-change="games.updateState()" ng-disabled='games.inputDisabled' ng-trim="false">
+
+		</div>
 
 	</div>
 

@@ -11,7 +11,6 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
   self.getBrandStyle   = getBrandStyle;
   self.checkLoggedIn   = checkLoggedIn;
   self.logout          = logout;
-  self.reloadHome      = reloadHome;
   self.enterRoom       = enterRoom;
   self.leaveRoom       = leaveRoom;
   self.listRooms       = listRooms;
@@ -26,15 +25,10 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
 
   // Log out user
   function logout() {
+    leaveRoom();
     TokenService.removeToken();
     CurrentUser.clearUser();
     $state.go('home');
-    $window.location.reload();
-  }
-
-  // Refresh page
-  function reloadHome() {
-  	$window.location.reload();
   }
   
   // Create new room with randomly generated name
