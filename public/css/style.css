@@ -69,13 +69,13 @@ ul {
 	margin-top: 80px;
 	color: #403F42;
 	margin-bottom: 40px;
-	margin-left: 30px;
+	text-align: center;
 }
 
-
-#login-form, #register-form {
-	margin-left: 30px;
+.form-container {
+	text-align: center;
 }
+
 
 #login-form input, #register-form input {
 	color: #403F42; 
@@ -88,6 +88,10 @@ ul {
 }
 
 #login-button, #register-button {
+	margin-top: 20px;
+}
+
+.grey-button {
 	text-decoration: none;
 	border: 1px solid transparent;
 	border-radius: 3px;
@@ -279,11 +283,6 @@ ul {
 
 
 .new-room-button {
-	text-decoration: none;
-	border: 1px solid transparent;
-	border-radius: 3px;
-	color: #FAF8F9;
-	background-color: #403F42;
 }
 
 

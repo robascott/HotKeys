@@ -11,7 +11,7 @@
 
 	<form id='home-form' name='roomForm' ng-submit='nav.enterRoom()'>
 		<input ng-model='nav.roomName' name='room' ng-minlength="5" ng-maxlength="30" reg-exp-require="/^[a-zA-Z0-9]{1,20}$/" type='text' id='room-input' placeholder="Enter room name (optional)" autocomplete="off">
-		<input class='new-room-button' type='submit' value='Start playing' ng-click='nav.reloadPage()'>
+		<input class='new-room-button grey-button' type='submit' value='Start playing' ng-click='nav.reloadPage()'>
 	</form>
 
 	<div id='home-messages' ng-messages="roomForm.room.$error" role="alert">

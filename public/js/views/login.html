@@ -1,16 +1,16 @@
-<section ng-hide="users.checkLoggedIn()" ng-controller='UsersController as users'>
+<section class='form-container' ng-hide="users.checkLoggedIn()" ng-controller='UsersController as users'>
   <h1 id='login-title'>Login</h1>
   <form id="login-form" name="users.loginForm" ng-submit="users.login()" novalidate>
     <div class="alert alert-danger" role="alert" ng-show="(!!users.error && users.loginForm.$submitted)">{{ users.error }}</div>
 
     <div class="form-group">
-      <input type="email" id="email" placeholder="Email" name="email" ng-model="users.user.email" required>
+      <input focus-on-condition="true" type="email" id="email" placeholder="Email" name="email" ng-model="users.user.email" required>
     </div>
 
     <div class="form-group">
       <input type="password" id="password" name="password"  placeholder="Password" ng-model="users.user.password" required>
     </div>
 
-    <button id='login-button' type="submit">Log in</button>
+    <button id='login-button' class='grey-button' type="submit">Log in</button>
   </form>
 </section>
