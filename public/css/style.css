@@ -15,6 +15,7 @@ main {
 ul {
 	list-style-type: none;
 	padding-left: 0;
+	margin: 0;
 }
 
 .alert {
@@ -24,6 +25,11 @@ ul {
 	padding-top: 2px;
 	padding-bottom: 2px;
 }
+
+
+/***************************
+| Navbar styling
+****************************/
 
 .nav-container {
 	margin-left: 30px;
@@ -45,6 +51,10 @@ ul {
    font-size: 15px;
    color: white !important;
    font-family: 'Open Sans', sans-serif;
+}
+
+.navbar-nav > li > a:hover {
+   color: #BDC3C7 !important;
 }
 
 .nav-title {
@@ -71,7 +81,6 @@ ul {
 	font-family: 'Permanent Marker', sans-serif;
 }
 
-
 #login-title, #register-title {
 	font-family: 'Rubik', sans-serif;
 	margin-top: 80px;
@@ -83,7 +92,6 @@ ul {
 .form-container {
 	text-align: center;
 }
-
 
 #login-form input, #register-form input {
 	color: #403F42; 
@@ -116,7 +124,6 @@ ul {
 	background-color: #333234;
 }
 
-
 #footer {
    position:fixed;
    left:0px;
@@ -139,20 +146,83 @@ ul {
 }
 
 
-.progress {
-	margin-left: 250px
+
+/***************************
+| Race page styling
+****************************/
+
+.waiting-msg {
+	font-size: 30px;
 }
 
-.text-areas {
-	text-align: center;
+.new-game-button {
+	display: block;
+	margin-bottom: 10px;	
+}
+
+.race-elements {
+	margin: auto;
+}
+
+.progress {
+	position: relative;
+	margin: 0px auto;
+	overflow: visible;
+	margin-bottom: 8px;
+	border: none;
+	border-radius: 0;
+	box-shadow: none;
+	background-color: #DADFE1;
+}
+
+.progress-bar-text {
+    display: block;
+    position: absolute;
+    width: 100%;
+    color: #403F42;
+}
+
+.progress-bar {
+	min-width: 1%;
+	background-color: #e74c3c;
+}
+
+.username {
+	position: absolute;
+	width: 200px;
+	right: -210px;
+	bottom: -10px;
+}
+
+.position {
+	font-size: 20px;
+	margin-left: 10px;
 }
 
 .race-info {
+	margin: 0 auto;
 	width: 500px;
 }
 
 .name-form {
 	margin-bottom: 10px;
+}
+
+#timer-text, #wpm-text {
+	font-size: 20px;
+	display: inline;
+}
+
+#wpm-text {
+	float: left;
+}
+
+#timer-text {
+	float: right;
+}
+
+.text-elements {
+	text-align: center;
 }
 
 #paragraph {
@@ -161,13 +231,14 @@ ul {
 	margin: 0 auto;
 	border: 1px solid #c3c3c3;
 	border-radius: 4px;
-	padding: 5px;
+	padding: 5px 8px 5px 8px;
 	-webkit-box-shadow: 0px 2px 3px 0px rgba(50, 50, 50, 0.11);
 	-moz-box-shadow: 0px 2px 3px 0px rgba(50, 50, 50, 0.11);
 	box-shadow: 0px 2px 3px 0px rgba(50, 50, 50, 0.11);
 	clear: left;
 	clear: right;
 	background-color: white;
+	text-align: left;
 }
 
 #typebox {
@@ -185,47 +256,29 @@ ul {
 	box-shadow: 0px 2px 3px 0px rgba(50, 50, 50, 0.11);
 }
 
-#timer-text, #wpm-text {
-	font-size: 20px;
-	display: inline;
-}
-
-#wpm-text {
-	float: left;
-}
-
-#timer-text {
-	float: right;
+.input-inactive {
+	background-color: white;
 }
 
 .input-incorrect {
-	background-color: #e74c3c
+	background-color: #e74c3c;
 }
-
 
 .correct {
 	color: green;
 	text-decoration: underline;
 }
 
-
 .incorrect {
 	color: red;
 	text-decoration: underline;
 }
 
-.new-game-button {
-	display: block;
-	margin-bottom: 10px;	
-}
 
 
-ul {
-	margin: 0;
-}
-
-
-
+/***************************
+| Homepage styling
+****************************/
 
 #home-title-container {
 	height: 85px;
@@ -292,6 +345,16 @@ ul {
 	text-align: center;
 }
 
+#room-input {
+	width: 160px;
+	outline: none;
+	background-color: #FAF8F9;
+	border: 3px solid #403F42;
+	border-style: none none solid none;
+	font-size: 12px;
+	margin-right: 8px;
+}
+
 #home-messages {
 	text-align: left;
 	color: maroon;
@@ -308,41 +371,10 @@ ul {
 }
 
 
-.new-room-button {
-}
 
-
-#room-input {
-	width: 160px;
-	outline: none;
-	background-color: #FAF8F9;
-	border: 3px solid #403F42;
-	border-style: none none solid none;
-	font-size: 12px;
-	margin-right: 8px;
-}
-
-
-.username {
-	display: inline;
-	position: relative;
-	bottom: 8px;
-	margin-left: 8px;
-}
-
-.progress {
-	margin: 2px;
-	display: inline-block;
-}
-
-
-.position {
-	font-size: 20px;
-}
-
-.waiting-msg {
-	font-size: 30px;
-}
+/***************************
+| Profile styling
+****************************/
 
 #profile-username {
 	margin-bottom: 30px;

@@ -32,7 +32,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   }
 
   // Player data
-  self.myData = {percentage: "", wpm: 0};
+  self.myData = {percentage: "", wpm: ""};
   self.playerData = {};  // e.g. {234235235: {name: 'James', perctentage: 24, position: 1}, 23412353: {name: 'Mark', percentage: 18, position: 2}}
   self.playerPositions = {} // e.g. {234235235: 1, 3452345234: 2}
   
@@ -109,9 +109,9 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   // Calculate WPM and percentage complete
   self.updateStats = function(time) {
-    self.myData['wpm'] = Math.floor((self.typedSoFar.length*1.0/5)/time);
+    self.myData['wpm'] = Math.floor((self.typedSoFar.length*1.0/5)/time) + ' WPM';
     var percentageComplete = (self.typedSoFar.length/paragraphText.length)*100;
-    socket.emit('update markers', {id: socket.id, percentage: percentageComplete, wpm: self.myData.wpm});
+    socket.emit('update markers', {id: socket.id, percentage: percentageComplete, wpm: self.myData.wpm.replace(/[a-zA-Z\s]+/g,'')});
     self.myData['percentage'] = percentageComplete;
   }
 
@@ -239,6 +239,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   		
       if (--timer < 0) {
   			if (self.currentState==='countdown') {
+          self.myData.wpm = "0 WPM";
   				self.inputDisabled = false;
   				$interval.cancel(timerInterval);
           self.currentState = 'racing';
@@ -271,7 +272,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     self.tempName = "";
     self.inputText = "";
     self.typedSoFar = "";
-    self.myData = {percentage: "", wpm: "0"};
+    self.myData = {percentage: "", wpm: ""};
     self.playerData = {};
     self.playerPositions = {};
   	wordIndex = 0;
@@ -298,7 +299,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   socket.on('update markers', function(data) {
     self.playerData[data.id].percentage = data.percentage;
-    self.playerData[data.id].wpm = data.wpm
+    self.playerData[data.id].wpm = data.wpm + ' WPM';
   });
 
 
@@ -328,7 +329,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   socket.on('show marker (remote)', function(data) {
     self.playerData[data.id] = {};
     self.playerData[data.id].percentage = "";
-    self.playerData[data.id].wpm = "0";
+    self.playerData[data.id].wpm = "";
     self.playerData[data.id].name = data.name;
     self.playerData[data.id].registered = data.registered;
     self.playerData[data.id].userId = data.userId;
