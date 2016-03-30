@@ -89,10 +89,6 @@ io.on('connection', function(socket){
   socket.on('reporting game state to server', function(data) {
     io.sockets.in(socket.room).emit('reporting game state to client', data);
   });
-
-  socket.on('show marker (remote)', function(data) {
-    socket.broadcast.to(socket.room).emit('show marker (remote)', data);
-  });
   
   socket.on('disconnect', function() {
     console.log('user disconnected');
@@ -117,8 +113,6 @@ io.on('connection', function(socket){
     // Rejoin default room
     socket.room = 'initRoom';
     socket.join(socket.room);
-
-
   });
 
   socket.on('start game', function(data) {

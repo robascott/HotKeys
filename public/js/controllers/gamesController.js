@@ -59,14 +59,12 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   });
 
   $timeout(function() {
-    console.log(responsesArray);
     if (responsesArray.indexOf(true) > -1) {
       self.gameRunning = true;
       self.gameInProgress = true;
       self.waitingToJoin = true;
     } else {
       self.waitingToJoin = false;
-      // socket.emit('show marker (remote)', {id: socket.id, name: self.name, registered: self.loggedIn, userId: getUserId()});
       socket.emit('get markers');
     }
   }, 1000);
@@ -113,7 +111,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   self.updateStats = function(time) {
     self.myData['wpm'] = Math.floor((self.typedSoFar.length*1.0/5)/time) + ' WPM';
     var percentageComplete = (self.typedSoFar.length/paragraphText.length)*100;
-    socket.emit('update markers', {id: socket.id, percentage: percentageComplete, wpm: self.myData.wpm.replace(/[a-zA-Z\s]+/g,'')});
+    socket.emit('update markers', {id: socket.id, percentage: percentageComplete, wpm: self.myData.wpm});
     self.myData['percentage'] = percentageComplete;
   }
 
@@ -284,7 +282,8 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     self.playerPositions = {};
   	wordIndex = 0;
 
-    socket.emit('show marker (remote)', {id: socket.id, name: self.name});
+
+    socket.emit('get markers');
 
   	nextWord = paragraphText.split(" ")[0] + " ";
   	paragraphHtmlArray = paragraphText.split(" ");
@@ -307,7 +306,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   socket.on('update markers', function(data) {
     if (!self.waitingToJoin) {
       self.playerData[data.id].percentage = data.percentage;
-      self.playerData[data.id].wpm = data.wpm + ' WPM';
+      self.playerData[data.id].wpm = data.wpm;
     }
   });
 
@@ -315,8 +314,8 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   socket.on('update markers (new user)', function(data) {
     self.playerData[data.id] = {};
     self.playerData[data.id].percentage = data.percentage;
-    self.playerData[data.id].wpm = data.wpm + " WPM";
-    self.playerData[data.id].position = convertToOrdinal(data.position);
+    self.playerData[data.id].wpm = data.wpm;
+    self.playerData[data.id].position = data.position;
     self.playerData[data.id].name = data.name;
     self.playerData[data.id].registered = data.registered;
     self.playerData[data.id].userId = data.userId;
@@ -344,19 +343,10 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
 
   socket.on('show marker', function() {
-      // socket.emit('show marker (remote)', {id: socket.id, name: self.name, registered: self.loggedIn, userId: getUserId()});
-      socket.emit('update markers (new user)', {id: socket.id, name: self.name, percentage: self.myData.percentage, wpm: self.myData.wpm.replace(/[a-zA-Z\s]+/g,''), position: self.myData.position});
+      socket.emit('update markers (new user)', {id: socket.id, name: self.name, percentage: self.myData.percentage, wpm: self.myData.wpm, position: self.myData.position});
   });
 
-  socket.on('show marker (remote)', function(data) {
-    self.playerData[data.id] = {};
-    self.playerData[data.id].percentage = "";
-    self.playerData[data.id].wpm = "";
-    self.playerData[data.id].name = data.name;
-    self.playerData[data.id].registered = data.registered;
-    self.playerData[data.id].userId = data.userId;
-    $scope.$apply();
-  });
+
 
   socket.on('update name', function(data) {
     self.playerData[data.id].name = data.name;
@@ -367,20 +357,19 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     if (!self.gameRunning) {
       // Refresh player info
       self.playerData = {};
-      socket.emit('show marker (remote)', {id: socket.id, name: self.name, registered: self.loggedIn, userId: getUserId()});
+      socket.emit('update markers (new user)', {id: socket.id, name: self.name, percentage: self.myData.percentage, wpm: self.myData.wpm, position: self.myData.position});
       $scope.$apply();
     }
   });
 
   socket.on('get game state', function() {
-    console.log(socket.id);
     socket.emit('reporting game state to server', {gameRunning: self.gameRunning});
   });
 
   socket.on('end game', function() {
+    $interval.cancel(timerInterval);
     self.gameRunning = false;
     if (self.waitingToJoin) {
-      // socket.emit('show marker (remote)', {id: socket.id, name: self.name});
       self.waitingToJoin = false;
       socket.emit('get markers');
     }
