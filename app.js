@@ -70,14 +70,21 @@ io.on('connection', function(socket){
     socket.join(data.room);
     socket.room = data.room;
 
-    socket.broadcast.to(socket.room).emit('show marker');
+    // socket.broadcast.to(socket.room).emit('show marker');
+    socket.broadcast.to(socket.room).emit('get game state');
 
     console.log('switched room');
   });
 
-  socket.on('is game running', function() {
-    io.sockets.in(socket.room).emit('get game state');
-  });
+  // When joining game
+  socket.on('get markers', function() {
+    io.sockets.in(socket.room).emit('show marker');
+  })
+
+
+  socket.on('update markers (new user)', function(data) {
+    socket.broadcast.to(socket.room).emit('update markers (new user)', data);
+  })
 
   socket.on('reporting game state to server', function(data) {
     io.sockets.in(socket.room).emit('reporting game state to client', data);
@@ -110,6 +117,8 @@ io.on('connection', function(socket){
     // Rejoin default room
     socket.room = 'initRoom';
     socket.join(socket.room);
+
+
   });
 
   socket.on('start game', function(data) {

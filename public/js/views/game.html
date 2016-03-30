@@ -1,20 +1,25 @@
 <section>
 	<section ng-controller="RacesController as races"> 
 
-	<input class='new-game-button btn btn-success' ng-click='games.newGame()' type='button' value='New Game' ng-hide='games.waitingToJoin || games.gameRunning'>
-
-	<form class='name-form' ng-submit='games.updateUsername()' ng-hide='games.loggedIn || games.gameRunning'>
-		<input type='text' placeholder='Enter name' ng-model='games.tempName' ng-disabled='games.gameRunning'>
-		<input class='btn btn-info btn-xs' type='submit' value='Update'>
-	</form>
-
 	<div class='loading' ng-show='games.waitingToJoin'>
 		<p ng-show='games.gameInProgress'>Game in progress</p>
 		<p class='waiting-msg'>Waiting to join...</p>
 		<img src='http://media.giphy.com/media/JBeu9q9LC1Kve/giphy.gif' style='width: 40px'>
 	</div>
 
+	<div id='race-nav-contents' ng-hide='games.waitingToJoin || games.gameRunning'>
+		<form class='name-form' ng-submit='games.updateUsername()' ng-hide='games.loggedIn'>
+			<input id='name-form-textbox' type='text' placeholder='Enter name' ng-model='games.tempName' ng-disabled='games.gameRunning'>
+			<input id='update-name-button' class='grey-button' type='submit' value='Update'>
+		</form>
+		<input class='new-game-button grey-button' ng-click='games.newGame()' type='button' value='Start racing'>
+	</div>
+
+	<div class='clearing'></div>
+
 	<div class='race-elements' ng-hide='games.waitingToJoin'>
+
+		
 
 		<div class="progress" style="width: 500px;">
 		    <div class="progress-bar" role="progressbar" aria-valuenow="{{games.myData.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width:{{games.myData.percentage}}%">

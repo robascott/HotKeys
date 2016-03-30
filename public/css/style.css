@@ -155,9 +155,47 @@ ul {
 	font-size: 30px;
 }
 
+
+#race-nav-contents {
+	position: relative;
+	width: 500px;
+	height: 60px;
+	margin: 0 auto;
+	margin-bottom: 20px;
+}
+
 .new-game-button {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	/*float: right;*/
 	display: block;
-	margin-bottom: 10px;	
+	height: 35px;	
+}
+
+.name-form {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+
+#name-form-textbox {
+	color: #403F42; 
+	width: 160px;
+	outline: none;
+	background-color: #FAF8F9;
+	border: 3px solid #403F42;
+	border-style: none none solid none;
+	outline: none;
+	margin-right: 4px;
+}
+
+#update-name-button {
+	font-size: 11px;
+}
+
+.clearing {
+	clear: both;
 }
 
 .race-elements {
@@ -179,7 +217,7 @@ ul {
     display: block;
     position: absolute;
     width: 100%;
-    color: #403F42;
+    color: white;
 }
 
 .progress-bar {
@@ -202,10 +240,6 @@ ul {
 .race-info {
 	margin: 0 auto;
 	width: 500px;
-}
-
-.name-form {
-	margin-bottom: 10px;
 }
 
 #timer-text, #wpm-text {
@@ -254,6 +288,7 @@ ul {
 	-webkit-box-shadow: 0px 2px 3px 0px rgba(50, 50, 50, 0.11);
 	-moz-box-shadow: 0px 2px 3px 0px rgba(50, 50, 50, 0.11);
 	box-shadow: 0px 2px 3px 0px rgba(50, 50, 50, 0.11);
+	outline: none;
 }
 
 .input-inactive {
