@@ -23,7 +23,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   self.tempName = "";
   self.timerText = "";
-  self.typeboxPlaceholder = "Type here when the game starts";
+  self.typeboxPlaceholder = "Type here when the race starts";
 
   // Set name
   if (self.loggedIn) {
@@ -33,7 +33,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   }
 
   // Player data
-  self.myData = {percentage: "", wpm: "", position: ""};
+  self.myData = {percentage: "", wpm: "", position: "Newcomer"};
   self.playerData = {};  // e.g. {234235235: {name: 'James', perctentage: 24, position: 1}, 23412353: {name: 'Mark', percentage: 18, position: 2}}
   self.playerPositions = {} // e.g. {234235235: 1, 3452345234: 2}
   
@@ -264,7 +264,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   				self.inputDisabled = false;
   				$interval.cancel(timerInterval);
           self.currentState = 'racing';
-  				self.startTimer(100);
+  				self.startTimer(99);
   			} else if (self.currentState==='finished') {
   				$interval.cancel(timerInterval);
   			}	else if (self.currentState==='racing') {

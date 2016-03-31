@@ -64,6 +64,9 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
+            <li ng-hide="nav.checkLoggedIn()">
+              <a href="#" ui-sref="home" ng-click='nav.leaveRoom()'>Home</a>
+            </li>
             <li ng-show="nav.isAdminMode()">
               <a href="#" ui-sref="users" ng-click='nav.leaveRoom()'>Users</i></a>
             </li>
