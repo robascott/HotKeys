@@ -62,6 +62,7 @@ io.on('connection', function(socket){
 
   console.log('user connected');
   
+  // Join (pre-game) default room
   socket.room = 'initRoom';
   socket.join(socket.room);
 
@@ -69,21 +70,20 @@ io.on('connection', function(socket){
     socket.leave(socket.room);
     socket.join(data.room);
     socket.room = data.room;
-
-    // socket.broadcast.to(socket.room).emit('show marker');
-    socket.broadcast.to(socket.room).emit('get game state');
-
     console.log('switched room');
+
+    // Ask players in room whether a game is currently in progress
+    socket.broadcast.to(socket.room).emit('get game state');
   });
 
-  // When joining game
-  socket.on('get markers', function() {
-    io.sockets.in(socket.room).emit('show marker');
+  socket.on('getPlayerInfo', function() {
+    // Ask players for their info
+    io.sockets.in(socket.room).emit('sendInfoToServer');
   })
 
-
-  socket.on('update markers (new user)', function(data) {
-    socket.broadcast.to(socket.room).emit('update markers (new user)', data);
+  socket.on('passingInfoToServer', function(data) {
+    // Pass player information to other players
+    socket.broadcast.to(socket.room).emit('refreshPlayerInfo', data);
   })
 
   socket.on('reporting game state to server', function(data) {
@@ -92,13 +92,13 @@ io.on('connection', function(socket){
   
   socket.on('disconnect', function() {
     console.log('user disconnected');
-    socket.broadcast.to(socket.room).emit('player left', {id:socket.id.substring(2), position:'DNF'});
+    socket.broadcast.to(socket.room).emit('player left', {id:socket.id.substring(2)});
     socket.broadcast.to(socket.room).emit('remove user');
   });
 
   socket.on('leave room', function(data) {
     // Update marker
-    socket.broadcast.to(socket.room).emit('player left', {id:socket.id.substring(2), position:'DNF'});
+    socket.broadcast.to(socket.room).emit('player left', {id:socket.id.substring(2)});
     socket.broadcast.to(socket.room).emit('remove user');
 
     // Get list of currently open rooms
@@ -115,12 +115,14 @@ io.on('connection', function(socket){
     socket.join(socket.room);
   });
 
-  socket.on('start game', function(data) {
-    io.sockets.in(socket.room).emit('start game', data);
+  
+  // Inform players that game has been started
+  socket.on('startingGame', function(data) {
+    io.sockets.in(socket.room).emit('startGame', data);
   });
 
-  socket.on('update markers', function(data) {
-    socket.broadcast.to(socket.room).emit('update markers', data);
+  socket.on('sendingStatsToServer', function(data) {
+    socket.broadcast.to(socket.room).emit('updatePlayerStats', data);
   });
 
   socket.on('reached finish', function(data) {
@@ -132,8 +134,8 @@ io.on('connection', function(socket){
     io.sockets.in(socket.room).emit('end game');
   });
 
-  socket.on('update name', function(data) {
-    socket.broadcast.to(socket.room).emit('update name', data);
+  socket.on('sendingNewNameToServer', function(data) {
+    socket.broadcast.to(socket.room).emit('updatePlayerName', data);
   });
 
   socket.on('get rooms', function() {

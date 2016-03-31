@@ -9,7 +9,7 @@
 
 	<div id='race-nav-contents' ng-hide='games.waitingToJoin || games.gameRunning'>
 		<form class='name-form' ng-submit='games.updateUsername()' ng-hide='games.loggedIn'>
-			<input id='name-form-textbox' type='text' placeholder='Enter name' ng-model='games.tempName' ng-disabled='games.gameRunning'>
+			<input id='name-form-textbox' type='text' placeholder='Change name' ng-model='games.tempName' ng-disabled='games.gameRunning' autocomplete="off">
 			<input id='update-name-button' class='grey-button' type='submit' value='Update'>
 		</form>
 		<input class='new-game-button grey-button' ng-click='games.newGame()' type='button' value='Start racing'>
