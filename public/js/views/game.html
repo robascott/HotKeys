@@ -19,8 +19,6 @@
 
 	<div class='race-elements' ng-hide='games.waitingToJoin'>
 
-		
-
 		<div class="progress" style="width: 500px;">
 		    <div class="progress-bar" role="progressbar" aria-valuenow="{{games.myData.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width:{{games.myData.percentage}}%">
 		    	<span class='progress-bar-text'>{{games.myData.wpm}}<span>
@@ -28,7 +26,6 @@
 		    <p class='username'><strong>{{games.name}}</strong> <span class='position'>{{games.myData.position}}</span></p>
 		</div>
 		
-
 		<ul>
 			<li ng-repeat='(id,data) in games.playerData'>
 				<div class="progress" style="width: 500px;">
