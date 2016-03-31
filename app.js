@@ -66,6 +66,7 @@ io.on('connection', function(socket){
   socket.room = 'initRoom';
   socket.join(socket.room);
 
+  // Switch room
   socket.on('switchRoom', function(data){
     socket.leave(socket.room);
     socket.join(data.room);
@@ -99,7 +100,8 @@ io.on('connection', function(socket){
 
   // When player leaves room
   socket.on('leaveRoom', function(data) {
-    socket.emit('stopClock');
+    // Cancel leaving player's interval 
+    socket.emit('stopClock', {room: socket.room});
 
     // Inform other players
     socket.broadcast.to(socket.room).emit('playerLeft', {id:socket.id.substring(2)});
@@ -119,10 +121,8 @@ io.on('connection', function(socket){
     socket.join(socket.room);
   });
 
-  
   // Inform players that game has been started
   socket.on('startingGame', function(data) {
-    // io.sockets.in(socket.room).emit('startGame', data);
     socket.broadcast.to(socket.room).emit('startGame', data);
   });
 
@@ -142,10 +142,17 @@ io.on('connection', function(socket){
     io.sockets.in(socket.room).emit('endGame');
   });
 
+  // Open up game lobby to waiting players
+  socket.on('noPlayersLeftInRace', function(data) {
+    socket.broadcast.to(data.room).emit('releaseWaitLock');
+  })
+
+  // Inform other players of temporary name update
   socket.on('sendingNewNameToServer', function(data) {
     socket.broadcast.to(socket.room).emit('updatePlayerName', data);
   });
 
+  // Get list of currently open rooms
   socket.on('getRooms', function() {
     var roomsObj = io.sockets.adapter.rooms;
     var roomsArray = [];

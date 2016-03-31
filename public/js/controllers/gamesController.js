@@ -162,7 +162,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     }
   }
 
-  
+
   // Return number of players still racing
   function playersLeftInRace() {
     var finishedPlayers = 0;
@@ -172,6 +172,21 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
       }
     });
     return self.noOfPlayersInRound - finishedPlayers;
+  }
+
+
+  // Determine whether players are still racing
+  var activePlayers = [];
+  function checkIfRoomIsEmpty() {
+    $timeout(function() {
+      if (activePlayers.length>0) {
+      } else {
+        self.gameRunning = false;
+        self.waitingToJoin = false;
+        socket.emit('getPlayerInfo');
+        $scope.$apply();
+      }
+    }, 2000);
   }
 
   
@@ -186,18 +201,17 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   // Send 'reached finish' message to other players
   function reachedFinish() {
-    self.nowRacing = false;
     self.inputText = "";
     self.inputDisabled = true;
 
     socket.emit('sendingStatsToServer', {id: socket.id, percentage: 100, wpm: self.myData.wpm});
     self.myData['percentage'] = 100;
 
-    var myPos = Object.keys(self.playerPositions).length + 1
+    var myPos = Object.keys(self.playerPositions).length + 1  // potential bug if players finish at almost the same time
     self.playerPositions[socket.id] = myPos;
     self.myData.position = convertToOrdinal(myPos);
 
-    if (playersLeftInRace()===0) { // potential bug if players finish at almost the same time
+    if (playersLeftInRace()===0) {
       socket.emit('endingGame', {id: socket.id, position: myPos});
     } else {
       socket.emit('completedRace', {id: socket.id, position: myPos});
@@ -242,7 +256,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
       self.timerText = minutes + ":" + seconds;
 
       if (--timer < 0) {
-        console.log(self.currentState);
   			if (self.currentState==='countdown') {
           self.timerText = "GO!";
           self.typeboxPlaceholder = "";
@@ -254,6 +267,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   			} else if (self.currentState==='finished') {
   				$interval.cancel(timerInterval);
   			}	else if (self.currentState==='racing') {
+          self.currentState = 'finished';
           $interval.cancel(timerInterval);
           didNotFinish();
         }
@@ -329,22 +343,31 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   // Get info of other players
   socket.on('refreshPlayerInfo', function(data) {
-    self.playerData[data.id] = {};
-    self.playerData[data.id].percentage = data.percentage;
-    self.playerData[data.id].wpm = data.wpm;
-    self.playerData[data.id].position = data.position;
-    self.playerData[data.id].name = data.name;
-    self.playerData[data.id].registered = data.registered;
-    self.playerData[data.id].userId = data.userId;
-    $scope.$apply();
-  })
+    if (self.waitingToJoin) {
+      activePlayers.push(data.id);
+    } else if (self.currentState!=='racing') {
+      self.playerData[data.id] = {};
+      self.playerData[data.id].percentage = data.percentage;
+      self.playerData[data.id].wpm = data.wpm;
+      self.playerData[data.id].position = data.position;
+      self.playerData[data.id].name = data.name;
+      self.playerData[data.id].registered = data.registered;
+      self.playerData[data.id].userId = data.userId;
+      $scope.$apply();
+    }
+  });
 
 
-  // Set quitting player's position to DNF is game is running
+  // Set quitting player's position to DNF if game is running
   socket.on('playerLeft', function(data) {
-    if (self.gameRunning) {
+    if (self.gameRunning && !self.waitingToJoin && self.playerData[data.id].position==="") {
       self.playerData[data.id].position = 'DNF';
       $scope.$apply();
+    } else if (self.waitingToJoin) {
+      // Check if room is empty
+      activePlayers = [];
+      checkIfRoomIsEmpty();
+      socket.emit('getPlayerInfo');
     }
   });
 
@@ -364,7 +387,9 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   // Send own player info to server
   socket.on('sendInfoToServer', function() {
+    if (!self.waitingToJoin) {
       socket.emit('passingInfoToServer', {id: socket.id, name: self.name, percentage: self.myData.percentage, wpm: self.myData.wpm, position: self.myData.position});
+    }
   });
 
 
@@ -387,7 +412,9 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   
   // Inform server of current game state
   socket.on('sendGameState', function() {
-    socket.emit('sendingGameStateToServer', {gameRunning: self.gameRunning});
+    if (!self.waitingToJoin) {
+      socket.emit('sendingGameStateToServer', {gameRunning: self.gameRunning});
+    }
   });
 
   
@@ -404,8 +431,26 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   });
 
 
-  socket.on('stopClock', function() {
+  // Allow waiting players to enter lobby
+  socket.on('releaseWaitLock', function() {
+    if (self.waitingToJoin) {
+      console.log('game has ended');
+      self.gameRunning = false;
+      self.waitingToJoin = false;
+      socket.emit('getPlayerInfo');
+      $scope.$apply();
+    }
+  });
+
+
+  // Cancel interval
+  socket.on('stopClock', function(data) {
     $interval.cancel(timerInterval);
+    
+    // Inform server that no active players remain in room
+    if (playersLeftInRace()===0) {
+      socket.emit('noPlayersLeftInRace', {room: data.room});
+    }
   });
 
 

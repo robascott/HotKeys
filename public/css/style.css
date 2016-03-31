@@ -12,6 +12,11 @@ main {
 	margin: 0 auto;
 }
 
+
+/***************************
+| General styling
+****************************/
+
 ul {
 	list-style-type: none;
 	padding-left: 0;
@@ -24,6 +29,44 @@ ul {
 	margin-bottom: 25px;
 	padding-top: 2px;
 	padding-bottom: 2px;
+}
+
+.grey-button {
+	outline: none;
+	text-decoration: none;
+	border: 1px solid transparent;
+	border-radius: 3px;
+	color: #FAF8F9;
+	background-color: #403F42;
+}
+
+.grey-button:hover {
+	background-color: #59575b;
+}
+
+.grey-button:active {
+	background-color: #333234;
+}
+
+#footer {
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   height:30px;
+   width:100%;
+}
+
+#footer-content {
+	float: right;
+	margin-right: 20px;
+}
+
+#footer a, #footer p {
+	font-size: 13px;
+	text-align: right;
+	color: #403F42;
+	padding-left: 4px;
+	padding-right: 4px;
 }
 
 
@@ -81,6 +124,11 @@ ul {
 	font-family: 'Permanent Marker', sans-serif;
 }
 
+
+/***************************
+| Login and sign up styling
+****************************/
+
 #login-title, #register-title {
 	font-family: 'Rubik', sans-serif;
 	margin-top: 80px;
@@ -107,44 +155,6 @@ ul {
 	margin-top: 20px;
 }
 
-.grey-button {
-	outline: none;
-	text-decoration: none;
-	border: 1px solid transparent;
-	border-radius: 3px;
-	color: #FAF8F9;
-	background-color: #403F42;
-}
-
-.grey-button:hover {
-	background-color: #59575b;
-}
-
-.grey-button:active {
-	background-color: #333234;
-}
-
-#footer {
-   position:fixed;
-   left:0px;
-   bottom:0px;
-   height:30px;
-   width:100%;
-}
-
-#footer-content {
-	float: right;
-	margin-right: 20px;
-}
-
-#footer a, #footer p {
-	font-size: 13px;
-	text-align: right;
-	color: #403F42;
-	padding-left: 4px;
-	padding-right: 4px;
-}
-
 
 
 /***************************
@@ -154,7 +164,6 @@ ul {
 .waiting-msg {
 	font-size: 30px;
 }
-
 
 #race-nav-contents {
 	position: relative;

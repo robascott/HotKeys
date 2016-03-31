@@ -2,7 +2,7 @@
 	<section ng-controller="RacesController as races"> 
 
 	<div class='loading' ng-show='games.waitingToJoin'>
-		<p ng-show='games.gameInProgress'>Game in progress</p>
+		<p class='waiting-msg' ng-show='games.gameInProgress'>Game in progress.</p>
 		<p class='waiting-msg'>Waiting to join...</p>
 		<img src='http://media.giphy.com/media/JBeu9q9LC1Kve/giphy.gif' style='width: 40px'>
 	</div>
