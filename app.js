@@ -73,33 +73,35 @@ io.on('connection', function(socket){
     console.log('switched room');
 
     // Ask players in room whether a game is currently in progress
-    socket.broadcast.to(socket.room).emit('get game state');
+    socket.broadcast.to(socket.room).emit('sendGameState');
   });
 
+  // Ask players for their info
   socket.on('getPlayerInfo', function() {
-    // Ask players for their info
     io.sockets.in(socket.room).emit('sendInfoToServer');
   })
 
+  // Pass player information to other players
   socket.on('passingInfoToServer', function(data) {
-    // Pass player information to other players
     socket.broadcast.to(socket.room).emit('refreshPlayerInfo', data);
   })
 
-  socket.on('reporting game state to server', function(data) {
-    io.sockets.in(socket.room).emit('reporting game state to client', data);
+  // Inform players of other players' game state
+  socket.on('sendingGameStateToServer', function(data) {
+    io.sockets.in(socket.room).emit('sendingGameStateToClient', data);
   });
   
   socket.on('disconnect', function() {
     console.log('user disconnected');
-    socket.broadcast.to(socket.room).emit('player left', {id:socket.id.substring(2)});
-    socket.broadcast.to(socket.room).emit('remove user');
+    socket.broadcast.to(socket.room).emit('playerLeft', {id:socket.id.substring(2)});
+    socket.broadcast.to(socket.room).emit('removeUser');
   });
 
-  socket.on('leave room', function(data) {
-    // Update marker
-    socket.broadcast.to(socket.room).emit('player left', {id:socket.id.substring(2)});
-    socket.broadcast.to(socket.room).emit('remove user');
+  // When player leaves room
+  socket.on('leaveRoom', function(data) {
+    // Inform other players
+    socket.broadcast.to(socket.room).emit('playerLeft', {id:socket.id.substring(2)});
+    socket.broadcast.to(socket.room).emit('removeUser');
 
     // Get list of currently open rooms
     var roomsObj = io.sockets.adapter.rooms;
@@ -121,24 +123,27 @@ io.on('connection', function(socket){
     io.sockets.in(socket.room).emit('startGame', data);
   });
 
+  // Send updated players stats to other players
   socket.on('sendingStatsToServer', function(data) {
     socket.broadcast.to(socket.room).emit('updatePlayerStats', data);
   });
 
-  socket.on('reached finish', function(data) {
-    socket.broadcast.to(socket.room).emit('player finished', data);
+  // Inform other players that a player has finished the race
+  socket.on('completedRace', function(data) {
+    socket.broadcast.to(socket.room).emit('showPlayerPosition', data);
   });
 
-  socket.on('race over', function(data) {
-    socket.broadcast.to(socket.room).emit('player finished', data);
-    io.sockets.in(socket.room).emit('end game');
+  // Inform other players that the game is over
+  socket.on('endingGame', function(data) {
+    socket.broadcast.to(socket.room).emit('showPlayerPosition', data);
+    io.sockets.in(socket.room).emit('endGame');
   });
 
   socket.on('sendingNewNameToServer', function(data) {
     socket.broadcast.to(socket.room).emit('updatePlayerName', data);
   });
 
-  socket.on('get rooms', function() {
+  socket.on('getRooms', function() {
     var roomsObj = io.sockets.adapter.rooms;
     var roomsArray = [];
 

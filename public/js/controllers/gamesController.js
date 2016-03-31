@@ -51,10 +51,8 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   socket.emit('switchRoom', {room: self.room});
 
   // Check if race is already in progress
-  // socket.emit('is game running');
-
   var responsesArray = [];
-  socket.on('reporting game state to client', function(data) {
+  socket.on('sendingGameStateToClient', function(data) {
     responsesArray.push(data.gameRunning);
   });
 
@@ -199,9 +197,9 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     self.myData.position = convertToOrdinal(myPos);
 
     if (playersLeftInRace()===0) { // potential bug if players finish at almost the same time
-      socket.emit('race over', {id: socket.id, position: myPos});
+      socket.emit('endingGame', {id: socket.id, position: myPos});
     } else {
-      socket.emit('reached finish', {id: socket.id, position: myPos});
+      socket.emit('completedRace', {id: socket.id, position: myPos});
     }
 
     if (self.loggedIn) {
@@ -221,7 +219,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     self.timerText = "0:00";
 
     self.myData.position = 'DNF';
-    socket.emit('race over', {id: socket.id, position: 'DNF'});
+    socket.emit('endingGame', {id: socket.id, position: 'DNF'});
   }
 
   
@@ -332,7 +330,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
 
   // Set quitting player's position to DNF is game is running
-  socket.on('player left', function(data) {
+  socket.on('playerLeft', function(data) {
     if (self.gameRunning) {
       self.playerData[data.id].position = 'DNF';
       $scope.$apply();
@@ -341,7 +339,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   
   // Show finished player's position
-  socket.on('player finished', function(data) {
+  socket.on('showPlayerPosition', function(data) {
     if (!self.waitingToJoin) {
       if (data.position!=='DNF') {
         self.playerPositions[data.id] = data.position;
@@ -367,7 +365,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   
   // Refresh info of players in room
-  socket.on('remove user', function() {
+  socket.on('removeUser', function() {
     if (!self.gameRunning) {
       self.playerData = {};
       socket.emit('passingInfoToServer', {id: socket.id, name: self.name, percentage: self.myData.percentage, wpm: self.myData.wpm, position: self.myData.position});
@@ -377,14 +375,14 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   
   // Inform server of current game state
-  socket.on('get game state', function() {
-    socket.emit('reporting game state to server', {gameRunning: self.gameRunning});
+  socket.on('sendGameState', function() {
+    socket.emit('sendingGameStateToServer', {gameRunning: self.gameRunning});
   });
 
   
   // Stop timer and join room if waiting to join
-  socket.on('end game', function() {
-    console.log('game ending');
+  socket.on('endGame', function() {
+    self.gameRunning = false;
     if (self.waitingToJoin) {
       self.waitingToJoin = false;
       socket.emit('getPlayerInfo');

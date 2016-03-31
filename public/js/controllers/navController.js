@@ -51,12 +51,12 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
 
   // Leave game room
   function leaveRoom() {
-    socket.emit('leave room');
+    socket.emit('leaveRoom');
   }
 
   // Get a list of the currently active rooms
   function listRooms() {
-    socket.emit('get rooms');
+    socket.emit('getRooms');
   }
 
   // Hide nav bar logo and name if on homepage
