@@ -21,7 +21,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   self.inputText = "";
   self.typedSoFar = "";
 
-  self.tempName = "";  // name input
+  self.tempName = "";
   self.timerText = "";
   self.typeboxPlaceholder = "Type here when the game starts";
 
@@ -44,7 +44,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   self.inputDisabled = true;
   self.gameRunning = false;
   self.gameInProgress = false;
-  self.nowRacing = false;
   self.waitingToJoin = true;
   self.incorrect = false;
   var nextWord = "";
@@ -228,7 +227,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     self.inputText = "";
     self.incorrect = false;
     self.inputDisabled = true;
-    self.nowRacing = false;
 
     $interval.cancel(timerInterval);
     self.timerText = "0:00";
@@ -260,6 +258,9 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
           self.timerText = "GO!";
           self.typeboxPlaceholder = "";
           self.myData.wpm = "0 WPM";
+          Object.keys(self.playerData).forEach(function(player) {
+            self.playerData[player].wpm = "0 WPM";
+          });
   				self.inputDisabled = false;
   				$interval.cancel(timerInterval);
           self.currentState = 'racing';
@@ -292,7 +293,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   // Reset game state
   self.startGame = function() {
   	self.gameRunning = true;
-    self.nowRacing = true;
   	self.inputDisabled = true;
     self.noOfPlayersInRound = Object.keys(self.playerData).length;
     
@@ -318,11 +318,11 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   	self.startTimer(3); // Set timer
   }
 
-  
+
+
   /*****************
    Socket messages
   ******************/
-  
   
   // Start game
   socket.on('startGame', function(data) {
@@ -331,7 +331,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     self.startGame();
   });
 
-  
   // Update player's WPM and percentage complete stats
   socket.on('updatePlayerStats', function(data) {
     if (!self.waitingToJoin) {
@@ -339,7 +338,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
       self.playerData[data.id].wpm = data.wpm;
     }
   });
-
 
   // Get info of other players
   socket.on('refreshPlayerInfo', function(data) {
@@ -357,7 +355,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     }
   });
 
-
   // Set quitting player's position to DNF if game is running
   socket.on('playerLeft', function(data) {
     if (self.gameRunning && !self.waitingToJoin && self.playerData[data.id].position==="") {
@@ -371,7 +368,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     }
   });
 
-  
   // Show finished player's position
   socket.on('showPlayerPosition', function(data) {
     if (!self.waitingToJoin) {
@@ -384,7 +380,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     }
   });
 
-
   // Send own player info to server
   socket.on('sendInfoToServer', function() {
     if (!self.waitingToJoin) {
@@ -392,14 +387,12 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     }
   });
 
-
   // Update player's name
   socket.on('updatePlayerName', function(data) {
     self.playerData[data.id].name = data.name;
     $scope.$apply();
   });
 
-  
   // Refresh info of players in room
   socket.on('removeUser', function() {
     if (!self.gameRunning) {
@@ -409,7 +402,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     }
   });
 
-  
   // Inform server of current game state
   socket.on('sendGameState', function() {
     if (!self.waitingToJoin) {
@@ -417,7 +409,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     }
   });
 
-  
   // Stop timer and join room if waiting to join
   socket.on('endGame', function() {
     self.gameRunning = false;
@@ -430,7 +421,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     $scope.$apply();
   });
 
-
   // Allow waiting players to enter lobby
   socket.on('releaseWaitLock', function() {
     if (self.waitingToJoin) {
@@ -442,7 +432,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     }
   });
 
-
   // Cancel interval
   socket.on('stopClock', function(data) {
     $interval.cancel(timerInterval);
@@ -452,7 +441,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
       socket.emit('noPlayersLeftInRace', {room: data.room});
     }
   });
-
 
   return self;
 

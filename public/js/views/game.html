@@ -51,7 +51,7 @@
 			<div id='paragraph' ng-bind-html="games.renderParagraph()">
 			</div>
 
-			<input focus-on-condition="!games.inputDisabled" id='typebox' ng-class="{'input-incorrect': games.incorrect}" ng-model='games.inputText' type='text' placeholder="{{games.textboxPlaceholder}}" ng-change="games.updateState()" ng-disabled='games.inputDisabled' ng-trim="false">
+			<input focus-on-condition="!games.inputDisabled" id='typebox' ng-class="{'input-incorrect': games.incorrect}" ng-model='games.inputText' type='text' placeholder="{{games.typeboxPlaceholder}}" ng-change="games.updateState()" ng-disabled='games.inputDisabled' ng-trim="false">
 		</div>
 
 	</div>
