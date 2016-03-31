@@ -2,9 +2,8 @@ angular
   .module('hotkeys')
   .controller('GamesController', GamesController);
 
-GamesController.$inject = ['User', 'Race', 'TokenService', '$state', 'CurrentUser', '$sce', '$interval', '$timeout', 'socket', '$scope', '$window'];
-function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $interval, $timeout, socket, $scope, $window){
-
+GamesController.$inject = ['User', 'Race', 'TokenService', '$state', 'CurrentUser', '$sce', '$interval', '$timeout', 'socket', '$scope', '$window', '$route'];
+function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $interval, $timeout, socket, $scope, $window, $route){
 
   var self = this;
 
@@ -14,6 +13,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   var paragraphWords;
   var paragraphHtmlArray = "";
   var wordIndex = 0;
+  var timerInterval;
 
   // Get room name from state params
   self.room = $state.params.room_id;
@@ -23,6 +23,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   self.tempName = "";  // name input
   self.timerText = "";
+  self.typeboxPlaceholder = "Type here when the game starts";
 
   // Set name
   if (self.loggedIn) {
@@ -238,10 +239,13 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   		minutes = minutes < 10 ? + minutes : minutes;
   		seconds = seconds < 10 ? "0" + seconds : seconds;
 
-  		self.timerText = minutes + ":" + seconds;
-  		
+      self.timerText = minutes + ":" + seconds;
+
       if (--timer < 0) {
+        console.log(self.currentState);
   			if (self.currentState==='countdown') {
+          self.timerText = "GO!";
+          self.typeboxPlaceholder = "";
           self.myData.wpm = "0 WPM";
   				self.inputDisabled = false;
   				$interval.cancel(timerInterval);
@@ -261,8 +265,14 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   // Inform players in room to start new game
   self.newGame = function() {
     var text = getText();
-    //var text = "This is a test sentence";
+    // var text = "This is a short sentence for testing purposes";
+    
+    // Start game
     socket.emit('startingGame', {text: text});
+
+    paragraphText = text;
+    paragraphWords = paragraphText.split(" ");
+    self.startGame();
   }
 
   // Reset game state
@@ -275,6 +285,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     self.tempName = "";
     self.inputText = "";
     self.typedSoFar = "";
+    self.typeboxPlaceholder = "Get ready..."
     self.myData = {percentage: "", wpm: "", position: ""};
     self.playerData = {};
     self.playerPositions = {};
@@ -390,7 +401,12 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
       $interval.cancel(timerInterval);
     }
     $scope.$apply();
-  })
+  });
+
+
+  socket.on('stopClock', function() {
+    $interval.cancel(timerInterval);
+  });
 
 
   return self;

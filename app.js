@@ -99,6 +99,8 @@ io.on('connection', function(socket){
 
   // When player leaves room
   socket.on('leaveRoom', function(data) {
+    socket.emit('stopClock');
+
     // Inform other players
     socket.broadcast.to(socket.room).emit('playerLeft', {id:socket.id.substring(2)});
     socket.broadcast.to(socket.room).emit('removeUser');
@@ -120,7 +122,8 @@ io.on('connection', function(socket){
   
   // Inform players that game has been started
   socket.on('startingGame', function(data) {
-    io.sockets.in(socket.room).emit('startGame', data);
+    // io.sockets.in(socket.room).emit('startGame', data);
+    socket.broadcast.to(socket.room).emit('startGame', data);
   });
 
   // Send updated players stats to other players

@@ -3,8 +3,8 @@ angular
   .controller('NavController', NavController);
 
 // Here we inject the currentUser service to access the current user
-UsersController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$scope', '$timeout', '$route', '$window', 'socket'];
-function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout, $route, $window, socket){
+UsersController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$scope', '$timeout', '$route', '$window', 'socket', '$interval'];
+function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout, $route, $window, socket, $interval){
   var self = this;
 
   self.roomName        = "";
@@ -39,7 +39,7 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
       var roomName;
       if (self.roomName.length>0) {  // Valid and non-empty input
         // Get name from user input
-      roomName = self.roomName;
+        roomName = self.roomName;
       } else {  // Empty input
         // Generate random room name
         roomName = Math.random().toString(36).substr(2, 13);
@@ -52,6 +52,7 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
   // Leave game room
   function leaveRoom() {
     socket.emit('leaveRoom');
+    //$window.location.reload();
   }
 
   // Get a list of the currently active rooms
