@@ -33,7 +33,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   }
 
   // Player data
-  self.myData = {percentage: "", wpm: "", position: "Newcomer"};
+  self.myData = {percentage: "", wpm: "", position: "New player"};
   self.playerData = {};  // e.g. {234235235: {name: 'James', perctentage: 24, position: 1}, 23412353: {name: 'Mark', percentage: 18, position: 2}}
   self.playerPositions = {} // e.g. {234235235: 1, 3452345234: 2}
   
@@ -248,6 +248,10 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   			self.updateStats(minutesElapsed);
   		}
 
+      if (self.currentState=='countdown') {
+        self.typeboxPlaceholder = "Starting in " + timer + "...";
+      }
+
   		minutes = minutes < 10 ? + minutes : minutes;
   		seconds = seconds < 10 ? "0" + seconds : seconds;
 
@@ -383,7 +387,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   // Send own player info to server
   socket.on('sendInfoToServer', function() {
     if (!self.waitingToJoin) {
-      socket.emit('passingInfoToServer', {id: socket.id, name: self.name, percentage: self.myData.percentage, wpm: self.myData.wpm, position: self.myData.position});
+      socket.emit('passingInfoToServer', {id: socket.id, name: self.name, percentage: self.myData.percentage, wpm: self.myData.wpm, position: self.myData.position, registered: self.loggedIn, userId: getUserId()});
     }
   });
 
@@ -397,7 +401,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   socket.on('removeUser', function() {
     if (!self.gameRunning) {
       self.playerData = {};
-      socket.emit('passingInfoToServer', {id: socket.id, name: self.name, percentage: self.myData.percentage, wpm: self.myData.wpm, position: self.myData.position});
+      socket.emit('passingInfoToServer', {id: socket.id, name: self.name, percentage: self.myData.percentage, wpm: self.myData.wpm, position: self.myData.position, registered: self.loggedIn, userId: getUserId()});
       $scope.$apply();
     }
   });
@@ -411,6 +415,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   // Stop timer and join room if waiting to join
   socket.on('endGame', function() {
+    self.timerText = "Race finished";
     self.gameRunning = false;
     if (self.waitingToJoin) {
       self.waitingToJoin = false;

@@ -1,6 +1,8 @@
 var User   = require('../models/user');
 var Race   = require('../models/race');
 
+var ObjectId = require('mongoose').Schema.ObjectId;
+
 function usersIndex(req, res) {
   User.find(function(err, users){
     if (err) return res.status(404).json({message: 'Something went wrong.'});
@@ -10,6 +12,11 @@ function usersIndex(req, res) {
 
 function usersShow(req, res){
   User.findById(req.params.id).populate('races').exec(function(err, user){
+
+    user.races.forEach(function(race) {
+      race.time = race._id.getTimestamp();
+    });
+
     if (err) return res.status(404).json({message: 'Something went wrong.'});
     res.status(200).send(user);
   });

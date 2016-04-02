@@ -1,11 +1,17 @@
 <section ng-show="profile.checkLoggedIn()">
 	<!-- <img ng-src="{{ users.user.local.image }}" style='width: 200px'> -->
 	
-	<h1 id='profile-username'>{{ profile.user.local.username}}</h1>
+	<div id='profile-info'>
+		<h1 id='profile-username'>{{ profile.user.local.username}}</h1>
+		<p id='profile-avgwpm'>Average WPM: {{ profile.user.averageWpm}}</p>
+		<p id='profile-totalRaces'>Total number of races: {{ profile.user.totalRaces}}</p>
+	</div>
 
-	<h3 id='profile-avgwpm'>Average WPM: {{ profile.user.averageWpm}}</h3>
+    <div id='chart-container'>
+    	<p id='chart-xAxisLabel'>WPM</p>
+    	<canvas id="wpmChart" width="750px" height="400"></canvas>
+    	<p id='chart-yAxisLabel'>Races</p>
+   	</div>
 
-	<h3 id='profile-totalRaces'>Total number of races: {{ profile.user.totalRaces}}</h3>
 
-    <canvas id="wpmChart" width="600px" height="400"></canvas>
 </section>

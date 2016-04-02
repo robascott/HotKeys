@@ -442,8 +442,39 @@ ul {
 | Profile styling
 ****************************/
 
+div#profile-info {
+	width: 750px;
+}
+
 #profile-username {
 	margin-bottom: 30px;
+}
+
+#profile-avgwpm, #profile-totalRaces {
+	font-size: 20px;
+}
+
+#chart-container {
+	text-align: center;
+}
+
+#chart-xAxisLabel {
+	display: inline-block;
+
+	position: relative;
+	top: -215px;
+
+	transform: rotate(-90deg);
+	/* Safari */
+	-webkit-transform: rotate(-90deg);
+	/* Firefox */
+	-moz-transform: rotate(-90deg);
+	/* IE */
+	-ms-transform: rotate(-90deg);
+	/* Opera */
+	-o-transform: rotate(-90deg);
+	/* Internet Explorer */
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }
 
 
