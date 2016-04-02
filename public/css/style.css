@@ -38,6 +38,8 @@ ul {
 	border-radius: 3px;
 	color: #FAF8F9;
 	background-color: #403F42;
+	font-family: 'Karla', sans-serif;
+	padding: 2px 6px 2px 6px;
 }
 
 .grey-button:hover {
@@ -130,7 +132,8 @@ ul {
 ****************************/
 
 #login-title, #register-title {
-	font-family: 'Rubik', sans-serif;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 300;
 	margin-top: 80px;
 	color: #403F42;
 	margin-bottom: 40px;
@@ -244,6 +247,7 @@ ul {
 .position {
 	font-size: 18px;
 	margin-left: 10px;
+	font-family: 'Karla', sans-serif;
 }
 
 .race-info {
@@ -356,14 +360,18 @@ ul {
 }
 
 #home-intro {
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 300;
 	color: #403F42;
-	font-size: 20px;
+	font-size: 18px;
 	margin-bottom: 10px;
 	text-align: center;
 }
 
 #home-tagline {
-	font-family: 'Rubik', sans-serif;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 300;
+	font-style: italic;
 	font-size: 25px;
 	color: #403F42;
 	top: calc(40% + 10px);

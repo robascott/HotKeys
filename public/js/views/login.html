@@ -1,5 +1,5 @@
 <section class='form-container' ng-hide="users.checkLoggedIn()" ng-controller='UsersController as users'>
-  <h1 id='login-title'>Log in</h1>
+  <h1 id='login-title'>Log In</h1>
   <form id="login-form" name="users.loginForm" ng-submit="users.login()" novalidate>
     <div class="alert alert-danger" role="alert" ng-show="(!!users.error && users.loginForm.$submitted)">{{ users.error }}</div>
 
@@ -11,7 +11,7 @@
       <input type="password" id="password" name="password"  placeholder="Password" ng-model="users.user.password" required>
     </div>
 
-    <button id='login-button' class='grey-button' type="submit">Log in</button>
+    <button id='login-button' class='grey-button' type="submit">LOG IN</button>
   </form>
 
   <p id='home-signup-prompt'>Don't have an account? Sign up <a href='/register'>here</a>.</p>
