@@ -93,9 +93,10 @@ ul {
 }
 
 .navbar-nav > li > a {
-   font-size: 15px;
+   font-size: 14px;
    color: white !important;
    font-family: 'Open Sans', sans-serif;
+   font-weight: 300;
 }
 
 .navbar-nav > li > a:hover {
@@ -420,6 +421,19 @@ ul {
 	color: #403F42;
 	font-size: 13px;
 	margin-top: 20px;
+}
+
+
+
+#not-found-title {
+	margin-top: 50px;
+	text-align: center;
+	font-size: 100px;
+}
+
+#not-found-msg {
+	text-align: center;
+	font-size: 23px;
 }
 
 
