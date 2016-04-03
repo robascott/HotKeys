@@ -13,12 +13,14 @@ function usersIndex(req, res) {
 function usersShow(req, res){
   User.findById(req.params.id).populate('races').exec(function(err, user){
 
-    user.races.forEach(function(race) {
-      race.time = race._id.getTimestamp();
+    var userJson = user.toObject();
+
+    userJson.races.forEach(function(race) {
+      race.date = race._id.getTimestamp();
     });
 
     if (err) return res.status(404).json({message: 'Something went wrong.'});
-    res.status(200).send(user);
+    res.status(200).send(userJson);
   });
 }
 

@@ -60,6 +60,8 @@ function ProfileController(User, TokenService, $state, CurrentUser, $scope, $win
       var races = self.user.races;
       var wpms = [];
 
+      console.log(races);
+
 
       races.forEach(function(race) {
         wpms.push(race.wpm);
@@ -72,12 +74,19 @@ function ProfileController(User, TokenService, $state, CurrentUser, $scope, $win
       var endValue = (Math.ceil(maxWpm/5) * 5) + 10;
       var noOfSteps = (endValue - startValue)/5;
 
-      var options = {scaleOverride: true, scaleStartValue: startValue, scaleStepWidth: 5, scaleSteps: noOfSteps};
+      var options = {
+        scaleOverride: true,
+        scaleStartValue: startValue,
+        scaleStepWidth: 5,
+        scaleSteps: noOfSteps,
+        tooltipTemplate: "<%= value %>"
+      };
+
       var wpmLineChart = new Chart(ctx).Line(data, options); // options is 2nd argument
 
       races.forEach(function(race) {
         if (race.wpm) {
-          wpmLineChart.addData([race.wpm], moment(race.time).format('DD MMM YY'));
+          wpmLineChart.addData([race.wpm], moment(race.date).format('YYYY-MM-DD'));
         }
       });
     }
