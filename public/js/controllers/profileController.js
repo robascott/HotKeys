@@ -60,12 +60,12 @@ function ProfileController(User, TokenService, $state, CurrentUser, $scope, $win
       var races = self.user.races;
       var wpms = [];
 
-      console.log(races);
-
-
       races.forEach(function(race) {
         wpms.push(race.wpm);
       });
+
+      // Get 20 most recent races
+      wpms = wpms.slice(Math.max(0,wpms.length - 20));
 
       var maxWpm = Math.max.apply(Math, wpms);
       var minWpm = Math.min.apply(Math, wpms);
@@ -82,7 +82,7 @@ function ProfileController(User, TokenService, $state, CurrentUser, $scope, $win
         tooltipTemplate: "<%= value %>"
       };
 
-      var wpmLineChart = new Chart(ctx).Line(data, options); // options is 2nd argument
+      var wpmLineChart = new Chart(ctx).Line(data, options);
 
       races.forEach(function(race) {
         if (race.wpm) {
