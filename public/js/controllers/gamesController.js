@@ -197,7 +197,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     var race = { race: { wpm: parseInt(self.myData.wpm), user: CurrentUser.getUser()._id } };
 
     Race.save(race, function(data) {
-    })
+    });
   }
 
 
@@ -286,8 +286,8 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   
   // Inform players in room to start new game
   self.newGame = function() {
-    var text = getText();
-    // var text = "This is a short sentence for testing purposes";
+    //var text = getText();
+    var text = "This is a short sentence for testing purposes";
     
     // Start game
     socket.emit('startingGame', {text: text});
@@ -366,6 +366,12 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   socket.on('playerLeft', function(data) {
     if (self.gameRunning && !self.waitingToJoin && self.playerData[data.id].position==="") {
       self.playerData[data.id].position = 'DNF';
+      
+      // End game if there are no remaining active players
+      if (self.currentState==='finished' && playersLeftInRace()===0) {
+        socket.emit('endingGame', {id: socket.id, position: self.myData.position});
+      }
+
       $scope.$apply();
     } else if (self.waitingToJoin) {
       // Check if room is empty
@@ -418,7 +424,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   // Stop timer and join room if waiting to join
   socket.on('endGame', function() {
-    self.timerText = "End of race";
     self.gameRunning = false;
     if (self.waitingToJoin) {
       self.waitingToJoin = false;
@@ -426,13 +431,13 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     } else {
       $interval.cancel(timerInterval);
     }
+    self.timerText = "End of race";
     $scope.$apply();
   });
 
   // Allow waiting players to enter lobby
   socket.on('releaseWaitLock', function() {
     if (self.waitingToJoin) {
-      console.log('game has ended');
       self.gameRunning = false;
       self.waitingToJoin = false;
       socket.emit('getPlayerInfo');
