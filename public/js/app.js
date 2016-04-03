@@ -16,6 +16,17 @@ angular
           };
           return $delegate;
       });
+  })
+  .run(function($rootScope, $state, CurrentUser) {
+    $rootScope.$on('$stateChangeStart', function(e, to) { 
+      if (to.data && to.data.mustBeLoggedOut && !!CurrentUser.getUser()) {
+        e.preventDefault();
+        $state.go('home');
+      } else if (to.data && to.data.mustBeLoggedIn && !CurrentUser.loggedIn()) {
+        e.preventDefault();
+        $state.go('home');
+      }
+    });
   });
 
   MainRouter.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
@@ -36,16 +47,25 @@ angular
       })
       .state('login', {
         url: "/login",
-        templateUrl: "./js/views/login.html"
+        templateUrl: "./js/views/login.html",
+        data: {
+          mustBeLoggedOut: true
+        }
       })
       .state('register', {
         url: "/register",
-        templateUrl: "./js/views/register.html"
+        templateUrl: "./js/views/register.html",
+        data: {
+          mustBeLoggedOut: true
+        }
       })
       .state('profile', {
         url: "/profile",
         templateUrl: "./js/views/profile.html",
-        controller: "ProfileController as profile"
+        controller: "ProfileController as profile",
+        data: {
+          mustBeLoggedIn: true
+        }
       })
       .state('user', {
         url: "/users/:id",

@@ -473,10 +473,11 @@ div#profile-info {
 }
 
 #chart-xAxisLabel {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 18px;
 	display: inline-block;
-
 	position: relative;
-	top: -215px;
+	top: -210px;
 
 	transform: rotate(-90deg);
 	/* Safari */

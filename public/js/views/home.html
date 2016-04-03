@@ -19,6 +19,6 @@
 	    <div ng-message="maxlength">Name too long</div>
 	</div>
 
-	<p id='home-signup-prompt'><a href='/login'>Log in</a> to save and track your scores</p>
+	<p ng-hide='nav.checkLoggedIn()' id='home-signup-prompt'><a href='/login'>Log in</a> to save and track your scores</p>
 
 </div>

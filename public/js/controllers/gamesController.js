@@ -418,7 +418,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   // Stop timer and join room if waiting to join
   socket.on('endGame', function() {
-    self.timerText = "Race finished";
+    self.timerText = "End of race";
     self.gameRunning = false;
     if (self.waitingToJoin) {
       self.waitingToJoin = false;

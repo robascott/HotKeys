@@ -21,4 +21,12 @@ function CurrentUser(TokenService){
     self.user = {};
   };
 
+  self.loggedIn = function() {
+    if (!!TokenService.decodeToken()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }

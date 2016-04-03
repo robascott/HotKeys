@@ -2,10 +2,10 @@ angular
   .module('hotkeys')
   .controller('UsersController', UsersController);
 
-// Here we inject the currentUser service to access the current user
-UsersController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$scope', '$timeout', '$route', '$window'];
-function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeout, $route, $window){
+UsersController.$inject = ['User', 'TokenService', '$state', 'CurrentUser', '$scope', '$timeout', '$route', '$window', '$rootScope'];
+function UsersController(User, TokenService, $state, CurrentUser, $scope, $timeout, $route, $window, $rootScope){
   var self = this;
+
 
   self.all           = [];
   self.user          = {};

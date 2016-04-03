@@ -4,13 +4,13 @@
 	<div id='profile-info'>
 		<h1 id='profile-username'>{{ profile.user.local.username}}</h1>
 		<p id='profile-totalRaces'>RACES: <strong>{{ profile.user.totalRaces}}</strong></p>
-		<p id='profile-avgwpm'>AVERAGE WPM: <strong>{{ profile.user.averageWpm}}</strong></p>
+		<p id='profile-avgwpm'>AVERAGE: <strong>{{ profile.user.averageWpm}} WPM</strong></p>
+		<p id='profile-avgwpm'>BEST: <strong>{{ profile.user.bestWpm}} WPM</strong></p>
 	</div>
 
     <div id='chart-container'>
     	<p id='chart-xAxisLabel'>WPM</p>
     	<canvas id="wpmChart" width="750px" height="400"></canvas>
-    	<p id='chart-yAxisLabel'>Races</p>
    	</div>
 
 

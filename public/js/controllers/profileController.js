@@ -22,12 +22,16 @@ function ProfileController(User, TokenService, $state, CurrentUser, $scope, $win
   // Get user's race stats
   function getStats() {
     var races = self.user.races;
-    self.user.totalRaces = races.length;
+    var wpms = [];
 
     var totalWpm = 0;
     races.forEach(function(race) {
+      wpms.push(race.wpm);
       totalWpm += race.wpm;
     });
+
+    self.user.totalRaces = wpms.length;
+    self.user.bestWpm = Math.max.apply(Math, wpms);
 
     if (races.length === 0) {
       self.user.averageWpm = 0;
