@@ -19,10 +19,13 @@ angular
   })
   .run(function($rootScope, $state, CurrentUser) {
     $rootScope.$on('$stateChangeStart', function(e, to) { 
-      if (to.data && to.data.mustBeLoggedOut && !!CurrentUser.getUser()) {
+      if (to.data && to.data.mustBeLoggedOut && CurrentUser.loggedIn()) {
         e.preventDefault();
         $state.go('home');
       } else if (to.data && to.data.mustBeLoggedIn && !CurrentUser.loggedIn()) {
+        e.preventDefault();
+        $state.go('home');
+      } else if (to.data && to.data.requiresAdmin && !CurrentUser.isAdmin()) {
         e.preventDefault();
         $state.go('home');
       }
@@ -73,8 +76,11 @@ angular
         controller: "ProfileController as profile"
       })
       .state('users', {
-        url: "/users",
-        templateUrl: "./js/views/users.html"
+        url: "/allusers",
+        templateUrl: "./js/views/users.html",
+        data: {
+          requiresAdmin: true
+        }
       })
       .state("error", {
         url: "/404",

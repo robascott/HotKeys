@@ -6,12 +6,20 @@
 		<p id='profile-totalRaces'>RACES: <strong>{{ profile.user.totalRaces}}</strong></p>
 		<p id='profile-avgwpm'>AVERAGE: <strong>{{ profile.user.averageWpm}} WPM</strong></p>
 		<p id='profile-avgwpm'>BEST: <strong>{{ profile.user.bestWpm}} WPM</strong></p>
+		
+		<div id='profile-deleteAccountContainer'>
+			<input ng-click="showConfirm = !showConfirm" ng-show='!showConfirm && profile.isMyProfile()' class="grey-button" type="button" value="Delete Account">
+			<p id='profile-confirmDeleteMsg' ng-show='showConfirm'>Are you sure?</p>
+			<input ng-show='showConfirm' ng-click="profile.deleteAccount()" class="btn btn-danger btn-xs" type="button" value="Delete">
+			<input ng-show='showConfirm' ng-click="showConfirm = !showConfirm" class="btn btn-info btn-xs" type="button" value="Cancel">
+		</div>
 	</div>
 
-    <div id='chart-container'>
+    <div ng-show='!profile.newUser' id='chart-container'>
     	<p id='chart-xAxisLabel'>WPM</p>
     	<canvas id="wpmChart" width="750px" height="400"></canvas>
    	</div>
 
+   	<p ng-show='profile.newUser' id='profile-newUserMsg'>This user has not taken part in any races yet</p>
 
 </section>

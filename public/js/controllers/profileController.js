@@ -9,9 +9,12 @@ function ProfileController(User, TokenService, $state, CurrentUser, $scope, $win
 
   self.user          = {};
 
+  self.newUser       = false;
   self.checkLoggedIn = checkLoggedIn;
+  self.isMyProfile   = isMyProfile;
   self.getStats      = getStats;
   self.createGraph   = createGraph;
+  self.deleteAccount = deleteAccount;
 
   // Check if there is a user currently logged in
   function checkLoggedIn() {
@@ -31,13 +34,18 @@ function ProfileController(User, TokenService, $state, CurrentUser, $scope, $win
     });
 
     self.user.totalRaces = wpms.length;
-    self.user.bestWpm = Math.max.apply(Math, wpms);
+    
 
-    if (races.length === 0) {
+    if (races.length === 0) {  // New user
       self.user.averageWpm = 0;
+      self.user.bestWpm = 0;
+      self.newUser = true;
     } else {
       var averageWpm = totalWpm*1.0 / races.length;
       self.user.averageWpm = Math.round(averageWpm * 100) / 100;
+      self.user.bestWpm = Math.max.apply(Math, wpms);
+      self.newUser = false;
+      createGraph();
     }
   }
 
@@ -96,13 +104,33 @@ function ProfileController(User, TokenService, $state, CurrentUser, $scope, $win
       });
     }
   }
+ 
+  // Check if profile ID matches that of the current logged in user
+  function isMyProfile() {
+    if (CurrentUser.loggedIn() && (self.user._id === CurrentUser.getUser()._id)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  // Delete account
+  function deleteAccount() {
+    if (isMyProfile()) {
+      User.delete({id: CurrentUser.getUser()._id}, function() {
+        TokenService.removeToken();
+        CurrentUser.clearUser();
+        $state.go('home');
+      });
+    }
+  }
 
-  // Retrieve relevant user
+  // Fetch relevant user
   if (!!$state.params.id) {
     User.get({id: $state.params.id}, function(user) {
       self.user = user
-      createGraph();
       getStats();
+      isMyProfile();
     }, function(res) {
       if (res.status === 404 || res.status === 401) {
         $state.go('error');
@@ -111,8 +139,8 @@ function ProfileController(User, TokenService, $state, CurrentUser, $scope, $win
   } else if (!!CurrentUser.getUser()) {
     User.get({id: CurrentUser.getUser()._id}, function(user) {
       self.user = user;
-      createGraph();
       getStats();
+      isMyProfile();
     });
   }
 

@@ -2,7 +2,6 @@ angular
   .module('hotkeys')
   .service('CurrentUser', CurrentUser);
 
-// We inject the token service into the this currentUser service and this service will be the one we call in our user controller
 CurrentUser.$inject = ["TokenService"];
 function CurrentUser(TokenService){
 
@@ -23,6 +22,14 @@ function CurrentUser(TokenService){
 
   self.loggedIn = function() {
     if (!!TokenService.decodeToken()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  self.isAdmin = function() {
+    if (!!TokenService.decodeToken() && self.getUser().local.email === "admin@admin.com") {
       return true;
     } else {
       return false;

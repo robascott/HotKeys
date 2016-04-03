@@ -468,8 +468,26 @@ div#profile-info {
 	margin-bottom: 0;
 }
 
+#profile-deleteAccountContainer {
+	display: inline;
+	margin-left: 20px;
+}
+
+#profile-confirmDeleteMsg {
+	font-family: 'Open Sans', sans-serif;
+	display: inline;
+	margin-right: 5px;
+}
+
 #chart-container {
 	text-align: center;
+}
+
+#profile-newUserMsg {
+	text-align: center;
+	font-size: 22px;
+	margin-top: 130px;
+	font-family: 'Open Sans', sans-serif;
 }
 
 #chart-xAxisLabel {

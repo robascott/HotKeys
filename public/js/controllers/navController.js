@@ -14,7 +14,7 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
   self.leaveRoom       = leaveRoom;
   self.listRooms       = listRooms;
   self.getBodyStyle    = getBodyStyle;
-  self.isAdminMode     = isAdminMode;
+  self.isAdmin         = isAdmin;
 
   // Check if a user is currently logged in
   function checkLoggedIn() {
@@ -76,12 +76,8 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
   }
 
   // Check whether admin account is logged in
-  function isAdminMode() {
-    if (checkLoggedIn() && CurrentUser.getUser().local.email === "admin@admin.com") {
-      return true;
-    } else {
-      return false;
-    }
+  function isAdmin() {
+    return CurrentUser.isAdmin();
   }
 
   return self;
