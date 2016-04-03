@@ -7,8 +7,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   var self = this;
 
-  self.loggedIn = !!CurrentUser.getUser();
-
   var paragraphText;
   var paragraphWords;
   var paragraphHtmlArray = "";
@@ -26,7 +24,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   self.typeboxPlaceholder = "Type here when the race starts";
 
   // Set name
-  if (self.loggedIn) {
+  if (isLoggedIn()) {
     self.name = CurrentUser.getUser().local.username;
   } else {
     self.name = "Player " + (Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000);
@@ -68,9 +66,14 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   }, 1000);
 
 
+  function isLoggedIn() {
+    return !!CurrentUser.getUser();
+  }
+
+
   // Get user id of logged in user
   function getUserId() {
-    if (self.loggedIn) {
+    if (isLoggedIn()) {
       return CurrentUser.getUser()._id;
     } else {
       return "";
@@ -216,7 +219,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
       socket.emit('completedRace', {id: socket.id, position: myPos});
     }
 
-    if (self.loggedIn) {
+    if (isLoggedIn()) {
       saveRace();
     }
   }
@@ -387,7 +390,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   // Send own player info to server
   socket.on('sendInfoToServer', function() {
     if (!self.waitingToJoin) {
-      socket.emit('passingInfoToServer', {id: socket.id, name: self.name, percentage: self.myData.percentage, wpm: self.myData.wpm, position: self.myData.position, registered: self.loggedIn, userId: getUserId()});
+      socket.emit('passingInfoToServer', {id: socket.id, name: self.name, percentage: self.myData.percentage, wpm: self.myData.wpm, position: self.myData.position, registered: isLoggedIn(), userId: getUserId()});
     }
   });
 
@@ -401,7 +404,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   socket.on('removeUser', function() {
     if (!self.gameRunning) {
       self.playerData = {};
-      socket.emit('passingInfoToServer', {id: socket.id, name: self.name, percentage: self.myData.percentage, wpm: self.myData.wpm, position: self.myData.position, registered: self.loggedIn, userId: getUserId()});
+      socket.emit('passingInfoToServer', {id: socket.id, name: self.name, percentage: self.myData.percentage, wpm: self.myData.wpm, position: self.myData.position, registered: isLoggedIn(), userId: getUserId()});
       $scope.$apply();
     }
   });

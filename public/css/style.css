@@ -443,15 +443,29 @@ ul {
 ****************************/
 
 div#profile-info {
-	width: 750px;
-}
-
-#profile-username {
+	width: 780px;
+	margin: auto auto;
 	margin-bottom: 30px;
 }
 
+#profile-username {
+	display: inline;
+	font-size: 50px;
+	margin-right: 20px;
+	font-family: 'Open Sans', sans-serif;
+}
+
 #profile-avgwpm, #profile-totalRaces {
-	font-size: 20px;
+	display: inline;
+	font-size: 15px;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 300;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+#profile-totalRaces {
+	margin-bottom: 0;
 }
 
 #chart-container {

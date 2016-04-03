@@ -19,6 +19,7 @@ function ProfileController(User, TokenService, $state, CurrentUser, $scope, $win
     return loggedIn;
   }
 
+  // Get user's race stats
   function getStats() {
     var races = self.user.races;
     self.user.totalRaces = races.length;
