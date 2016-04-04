@@ -169,6 +169,29 @@ ul {
 	font-size: 30px;
 }
 
+#race-shareDiv {
+	position: relative;
+	width: 500px;
+	margin: 0 auto;
+}
+
+#race-shareLinkMsg {
+	margin-right: 10px;
+	font-family: 'Open Sans', sans-serif;
+}
+
+#race-shareLinkDiv {
+	display: inline;
+}
+
+#race-shareLinkUrl {
+	border: 1px solid #DADFE1;
+	border-radius: 4px;
+	padding: 6px;
+	background-color: white;
+	font-family: 'Ubuntu Mono', 'Courier New', monospace;
+}
+
 #race-nav-contents {
 	position: relative;
 	width: 500px;
@@ -176,6 +199,8 @@ ul {
 	margin: 0 auto;
 	margin-bottom: 20px;
 }
+
+
 
 .new-game-button {
 	position: absolute;
@@ -242,7 +267,7 @@ ul {
 	position: absolute;
 	width: 300px;
 	right: -310px;
-	bottom: -10px;
+	bottom: -12px;
 }
 
 .position {
@@ -259,10 +284,12 @@ ul {
 #timer-text, #wpm-text {
 	font-size: 20px;
 	display: inline;
+	font-family: 'Open Sans', sans-serif;
 }
 
 #wpm-text {
 	float: left;
+	font-family: 'Open Sans', sans-serif;
 }
 
 #timer-text {

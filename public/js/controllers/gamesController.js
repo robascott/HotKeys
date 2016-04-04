@@ -13,14 +13,37 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   var wordIndex = 0;
   var timerInterval;
 
+
+  // Functions
+  self.isLoggedIn           = isLoggedIn;
+  self.getUserId            = getUserId;
+  self.getText              = getText;
+  self.updateUsername       = updateUsername;
+  self.updateStats          = updateStats;
+  self.updateState          = updateState;
+  self.renderParagraph      = renderParagraph;
+  self.convertToOrdinal     = convertToOrdinal;
+  self.playersLeftInRace    = playersLeftInRace;
+  self.checkIfRoomIsEmpty   = checkIfRoomIsEmpty;
+  self.saveRace             = saveRace;
+  self.reachedFinish        = reachedFinish;
+  self.didNotFinish         = didNotFinish;
+  self.startTimer           = startTimer;
+  self.newGame              = newGame;
+  self.startGame            = startGame;
+  self.selectText           = selectText;
+
+
   // Get room name from state params
   self.room = $state.params.room_id;
 
-  self.inputText = "";
-  self.typedSoFar = "";
+  self.roomUrl = "https://hotkeys.herokuapp.com/play/" + self.room;
 
-  self.tempName = "";
-  self.timerText = "";
+  self.inputText = "";  // Text in input box
+  self.typedSoFar = ""; // Portion of paragraph text typed so far
+
+  self.tempName = "";  // Temporary username
+  self.timerText = ""; // Countdown timer string
   self.typeboxPlaceholder = "Type here when the race starts";
 
   // Set name
@@ -46,14 +69,16 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   self.incorrect = false;
   var nextWord = "";
 
+  // Switch to 
   socket.emit('switchRoom', {room: self.room});
 
-  // Check if race is already in progress
+  // Check if a race is already in progress
   var responsesArray = [];
   socket.on('sendingGameStateToClient', function(data) {
     responsesArray.push(data.gameRunning);
   });
 
+  // Wait 1 second for responses
   $timeout(function() {
     if (responsesArray.indexOf(true) > -1) {
       self.gameRunning = true;
@@ -66,6 +91,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   }, 1000);
 
 
+  // Check if user is logged in
   function isLoggedIn() {
     return !!CurrentUser.getUser();
   }
@@ -81,6 +107,33 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   }
 
 
+  // Function for highlighting text
+  function selectText(element) {
+    var doc = document,
+        text = doc.getElementById(element),
+        range,
+        selection;
+    if (doc.body.createTextRange) {
+        range = document.body.createTextRange();
+        range.moveToElementText(text);
+        range.select();
+    } else if (window.getSelection) {
+        selection = window.getSelection();        
+        range = document.createRange();
+        range.selectNodeContents(text);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+  }
+
+  // jQuery workaround for 'highlight on click' functionality
+  $(function() {
+      $('#race-shareLinkUrl').click(function () {
+          SelectText('race-shareLinkDiv');
+      });
+  });
+
+
   // Get paragraph text
   function getText() {
     return content[Math.floor(Math.random()*content.length)];
@@ -88,7 +141,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
 
   // Update temporary username
-  self.updateUsername = function() {
+  function updateUsername() {
     var nameAlreadyExists = false;
 
     Object.keys(self.playerData).forEach(function(id) {
@@ -109,7 +162,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
 
   // Calculate WPM and percentage complete
-  self.updateStats = function(time) {
+  function updateStats(time) {
     self.myData['wpm'] = Math.floor((self.typedSoFar.length*1.0/5)/time) + ' WPM';
     var percentageComplete = (self.typedSoFar.length/paragraphText.length)*100;
     socket.emit('sendingStatsToServer', {id: socket.id, percentage: percentageComplete, wpm: self.myData.wpm});
@@ -118,9 +171,10 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
 
   // Update paragraph text
-  self.updateState = function() {
+  function updateState() {
   	if (nextWord.lastIndexOf(self.inputText, 0) === 0) { // Character match
   		self.incorrect = false
+      if (wordIndex===0) self.typeboxPlaceholder = "";
   		paragraphHtmlArray[wordIndex+1] = "<span class='correct'>" + nextWord.trim() + "</span>";
   		if (self.inputText.length == nextWord.length) {
   			self.typedSoFar += self.inputText;
@@ -147,7 +201,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
 
   // Render paragraph on page
-  self.renderParagraph = function() {
+  function renderParagraph() {
   	return $sce.trustAsHtml(self.paragraphHtmlString);
   }
 
@@ -240,7 +294,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   
   // Start round timer
-  self.startTimer = function(duration) {
+  function startTimer(duration) {
   	var timer = duration, minutes, seconds;
   	timerInterval = $interval(function () {
   		minutes = parseInt(timer / 60, 10);
@@ -248,7 +302,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   		if (self.currentState=='racing' && (duration-timer >= 1)) {
   			var minutesElapsed = ((duration-timer)*1.0)/60;
-  			self.updateStats(minutesElapsed);
+  			updateStats(minutesElapsed);
   		}
 
       if (self.currentState=='countdown') {
@@ -263,7 +317,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
       if (--timer < 0) {
   			if (self.currentState==='countdown') {
           self.timerText = "GO!";
-          self.typeboxPlaceholder = "";
+          self.typeboxPlaceholder = "Go!";
           self.myData.wpm = "0 WPM";
           Object.keys(self.playerData).forEach(function(player) {
             self.playerData[player].wpm = "0 WPM";
@@ -271,7 +325,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   				self.inputDisabled = false;
   				$interval.cancel(timerInterval);
           self.currentState = 'racing';
-  				self.startTimer(99);
+  				startTimer(99);
   			} else if (self.currentState==='finished') {
   				$interval.cancel(timerInterval);
   			}	else if (self.currentState==='racing') {
@@ -285,20 +339,20 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   
   // Inform players in room to start new game
-  self.newGame = function() {
-    //var text = getText();
-    var text = "This is a short sentence for testing purposes";
+  function newGame() {
+    var text = getText();
+    //var text = "This is a short sentence for testing purposes";
     
     // Start game
     socket.emit('startingGame', {text: text});
 
     paragraphText = text;
     paragraphWords = paragraphText.split(" ");
-    self.startGame();
+    startGame();
   }
 
   // Reset game state
-  self.startGame = function() {
+  function startGame() {
   	self.gameRunning = true;
   	self.inputDisabled = true;
     self.noOfPlayersInRound = Object.keys(self.playerData).length;
@@ -322,7 +376,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   	paragraphHtmlArray[1] = "<span class='correct'>" + nextWord.trim() + "</span>";
   	self.paragraphHtmlString = paragraphHtmlArray.join(" ");
     self.currentState = 'countdown';
-  	self.startTimer(3); // Set timer
+  	startTimer(3); // Set timer
   }
 
 
@@ -335,7 +389,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   socket.on('startGame', function(data) {
     paragraphText = data.text;
     paragraphWords = paragraphText.split(" ");
-    self.startGame();
+    startGame();
   });
 
   // Update player's WPM and percentage complete stats

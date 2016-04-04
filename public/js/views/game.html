@@ -7,6 +7,10 @@
 		<img src='http://media.giphy.com/media/JBeu9q9LC1Kve/giphy.gif' style='width: 40px'>
 	</div>
 
+	<div id='race-shareDiv' ng-hide='games.waitingToJoin || games.gameRunning'>
+		<span id='race-shareLinkMsg'>Room URL:</span><div id='race-shareLinkDiv'><span id='race-shareLinkUrl'>{{games.roomUrl}}</span></div>
+	</div>
+
 	<div id='race-nav-contents' ng-hide='games.waitingToJoin || games.gameRunning'>
 		<form class='name-form' ng-submit='games.updateUsername()' ng-hide='games.isLoggedIn()'>
 			<input id='name-form-textbox' type='text' placeholder='Change name' ng-model='games.tempName' ng-disabled='games.gameRunning' autocomplete="off">
