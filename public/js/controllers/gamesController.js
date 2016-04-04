@@ -13,8 +13,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   var wordIndex = 0;
   var timerInterval;
 
-
-  // Functions
   self.isLoggedIn           = isLoggedIn;
   self.getUserId            = getUserId;
   self.getText              = getText;
@@ -129,7 +127,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   // jQuery workaround for 'highlight on click' functionality
   $(function() {
       $('#race-shareLinkUrl').click(function () {
-          SelectText('race-shareLinkDiv');
+          selectText('race-shareLinkDiv');
       });
   });
 
@@ -341,7 +339,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   // Inform players in room to start new game
   function newGame() {
     var text = getText();
-    //var text = "This is a short sentence for testing purposes";
+    // var text = "This is a short sentence for testing purposes";
     
     // Start game
     socket.emit('startingGame', {text: text});
