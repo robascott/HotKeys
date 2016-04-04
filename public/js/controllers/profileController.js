@@ -78,7 +78,7 @@ function ProfileController(User, TokenService, $state, CurrentUser, $scope, $win
       });
 
       // Get 20 most recent races
-      wpms = wpms.slice(Math.max(0,wpms.length - 20));
+      races = races.slice(Math.max(0,races.length - 20));
 
       var maxWpm = Math.max.apply(Math, wpms);
       var minWpm = Math.min.apply(Math, wpms);
@@ -95,12 +95,12 @@ function ProfileController(User, TokenService, $state, CurrentUser, $scope, $win
         tooltipTemplate: "<%= value %>"
       };
 
+      // Initalise chart
       var wpmLineChart = new Chart(ctx).Line(data, options);
 
+      // Plot WPM values on chart
       races.forEach(function(race) {
-        if (race.wpm) {
-          wpmLineChart.addData([race.wpm], moment(race.date).format('YYYY-MM-DD'));
-        }
+        wpmLineChart.addData([race.wpm], moment(race.date).format('YYYY-MM-DD'));
       });
     }
   }

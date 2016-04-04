@@ -119,18 +119,18 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   // Update paragraph text
   self.updateState = function() {
-  	if (nextWord.lastIndexOf(self.inputText, 0) === 0) {
+  	if (nextWord.lastIndexOf(self.inputText, 0) === 0) { // Character match
   		self.incorrect = false
   		paragraphHtmlArray[wordIndex+1] = "<span class='correct'>" + nextWord.trim() + "</span>";
   		if (self.inputText.length == nextWord.length) {
   			self.typedSoFar += self.inputText;
   			paragraphHtmlArray[wordIndex+1] = "<span>" + nextWord + "</span>";
   			wordIndex++;
-  			if (wordIndex===paragraphWords.length) {
+  			if (wordIndex===paragraphWords.length) { // Finished
           self.currentState = 'finished';
   				reachedFinish();
-  			} else if (wordIndex===paragraphWords.length-1) { // last word
-  				nextWord = paragraphWords[wordIndex]; // no space after final word
+  			} else if (wordIndex===paragraphWords.length-1) { // Next word is final word
+  				nextWord = paragraphWords[wordIndex]; // No space after final word
           paragraphHtmlArray[wordIndex+1] = "<span class='correct'>" + nextWord.trim() + "</span>";
   			} else {
   				nextWord = paragraphWords[wordIndex] + " ";
@@ -138,7 +138,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   			}
   			self.inputText = "";
   		}
-  	} else {
+  	} else { // Typed wrong character
   		self.incorrect = true;
   		paragraphHtmlArray[wordIndex+1] = "<span class='incorrect'>" + nextWord.trim() + "</span>";
   	}
