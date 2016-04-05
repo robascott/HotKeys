@@ -1,17 +1,16 @@
 <!-- for testing purposes only -->
 <section ng-controller='UsersController as users'>
+  <h1>Admin accounts page</h1>
   <ul class="media-list">
     <li class="media" ng-repeat="user in users.all">
-      <div class="media-left">
-        <a href="#" ui-sref="profile">
-          <img class="media-object" ng-src="{{ user.local.image }}">
-        </a>
-      </div>
       <div class="media-body">
-        <h4 class="media-heading">{{ user.local.username }}</h4>
+        <a href="/users/{{ user._id }}"<h4 class="media-heading"><h4>{{ user.local.username }}</h4></a>
         <p>{{ user.local.email }}</p>
-        <p>{{ user._id }}</p>
-        <input ng-click="users.deleteUser(user)" class="btn btn-danger btn-xs" type="button" value="Delete">
+        <input ng-click="showConfirm = !showConfirm" ng-show='!showConfirm' class="btn btn-danger btn-xs" type="button" value="Delete">
+        <p style='display:inline' ng-show='showConfirm'>Are you sure?</p>
+        <input ng-show='showConfirm' ng-click="users.deleteUser(user)" class="btn btn-danger btn-xs" type="button" value="Delete">
+        <input ng-show='showConfirm' ng-click="showConfirm = !showConfirm" class="btn btn-info btn-xs" type="button" value="Cancel">
+        <br>
       </div>
     </li>
   </ul>
