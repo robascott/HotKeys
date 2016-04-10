@@ -80,5 +80,18 @@ function NavController(User, TokenService, $state, CurrentUser, $scope, $timeout
     return CurrentUser.isAdmin();
   }
 
+  // Log out if JSON web token has expired
+  function checkToken() {
+    var currentTime = new Date().getTime() / 1000; // Seconds since 1970-01-01
+    var expTime = TokenService.decodeToken().exp   // Token expiry time in seconds
+    if (currentTime - expTime > 0) {
+      TokenService.removeToken();
+    }
+  }
+
+  if (!!TokenService.getToken()) {
+    checkToken();
+  }
+
   return self;
 }
