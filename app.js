@@ -41,13 +41,28 @@ app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// app.use('/api', expressJWT({ secret: secret })
+//   .unless({
+//     path: [
+//       { url: '/api/login', methods: ['POST'] },
+//       { url: '/api/register', methods: ['POST'] }
+//     ]
+//   }));
+
 app.use('/api', expressJWT({ secret: secret })
-  .unless({
-    path: [
-      { url: '/api/login', methods: ['POST'] },
-      { url: '/api/register', methods: ['POST'] }
-    ]
-  }));
+  .unless(checkPath));
+
+// Skip token checking if token not required
+function checkPath(req) {
+  var url = req.url;
+  console.log(url);
+  if (url==="/login" || 
+      url==="/register" ||
+      url.match(/\/users\/[A-Za-z0-9]+/) && req.method==="GET")
+  {
+    return true;
+  }
+}
 
 app.use(function (err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
@@ -172,6 +187,5 @@ app.use("/api", routes);
 app.use(function(req, res) {
   res.sendfile(__dirname + '/public/index.html');
 });
-
 
 http.listen(process.env.PORT || 3000 )

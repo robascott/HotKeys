@@ -128,7 +128,7 @@ function ProfileController(User, TokenService, $state, CurrentUser, $scope, $win
   // Fetch relevant user
   if (!!$state.params.id) {
     User.get({id: $state.params.id}, function(user) {
-      self.user = user
+      self.user = user;
       getStats();
       isMyProfile();
     }, function(res) {

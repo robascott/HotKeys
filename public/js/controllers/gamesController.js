@@ -35,7 +35,7 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   // Get room name from state params
   self.room = $state.params.room_id;
 
-  self.roomUrl = "https://hotkeys.herokuapp.com/play/" + self.room;
+  self.roomUrl = window.location.protocol + "//" + window.location.host + "/play/" + self.room;
 
   self.inputText = "";  // Text in input box
   self.typedSoFar = ""; // Portion of paragraph text typed so far
@@ -279,7 +279,10 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
 
   // Send 'DNF' message to other players
   function didNotFinish() {
+    $interval.cancel(timerInterval);
+    self.currentState = 'finished';
     self.inputText = "";
+    self.typeboxPlaceholder = "";
     self.incorrect = false;
     self.inputDisabled = true;
 
@@ -327,8 +330,6 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
   			} else if (self.currentState==='finished') {
   				$interval.cancel(timerInterval);
   			}	else if (self.currentState==='racing') {
-          self.currentState = 'finished';
-          $interval.cancel(timerInterval);
           didNotFinish();
         }
   		}
@@ -480,6 +481,8 @@ function GamesController(User, Race, TokenService, $state, CurrentUser, $sce, $i
     if (self.waitingToJoin) {
       self.waitingToJoin = false;
       socket.emit('getPlayerInfo');
+    } else if (self.currentState==="racing") {
+      didNotFinish();
     } else {
       $interval.cancel(timerInterval);
     }

@@ -12,6 +12,7 @@ function usersIndex(req, res) {
 
 function usersShow(req, res){
   User.findById(req.params.id).populate('races').exec(function(err, user){
+    if (err) return res.status(404).json({message: 'Something went wrong.'});
 
     var userJson = user.toObject();
 
@@ -19,7 +20,6 @@ function usersShow(req, res){
       race.date = race._id.getTimestamp();
     });
 
-    if (err) return res.status(404).json({message: 'Something went wrong.'});
     res.status(200).send(userJson);
   });
 }

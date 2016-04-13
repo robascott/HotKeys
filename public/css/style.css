@@ -200,8 +200,6 @@ ul {
 	margin-bottom: 20px;
 }
 
-
-
 .new-game-button {
 	position: absolute;
 	bottom: 0;
@@ -267,7 +265,7 @@ ul {
 	position: absolute;
 	width: 300px;
 	right: -310px;
-	bottom: -12px;
+	bottom: -11px;
 }
 
 .position {
@@ -282,6 +280,7 @@ ul {
 }
 
 #timer-text, #wpm-text {
+	margin: 10px 0 3px;
 	font-size: 20px;
 	display: inline;
 	font-family: 'Open Sans', sans-serif;

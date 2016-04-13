@@ -19,7 +19,6 @@ router.route('/users/:id')
   .patch(usersController.usersUpdate)
   .delete(usersController.usersDelete)
 
-
 router.route('/races')
   .post(racesController.racesCreate)
 
