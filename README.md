@@ -1,6 +1,6 @@
 # Hot Keys
 
-Multiplayer typing game modelled on [Typeracer](http://play.typeracer.com/). Built with the MEAN stack and Socket.IO.
+Multiplayer typing game modelled on [TypeRacer](http://play.typeracer.com/). Built with the MEAN stack and [Socket.IO](http://socket.io/).
 
 [https://hotkeys.herokuapp.com/](https://hotkeys.herokuapp.com/)
 
