@@ -11,3 +11,7 @@ Multiplayer typing game modelled on [TypeRacer](http://play.typeracer.com/). Bui
 Node.js, Express.js, MongoDB, AngularJS, Mongoose, Socket.IO, Passport, Bootstrap
 
 **Libraries:** [Chart.js](http://www.chartjs.org/), [Moment.js](http://momentjs.com/)
+
+## How to run
+
+    npm install && npm start
